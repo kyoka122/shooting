@@ -79,6 +79,7 @@ namespace GameScene
                 }
 
             }
+            Debug.Log("_myRotChangeObj" + _myRotChangeObj);
             float[] colorArray=(float[])PhotonNetwork.LocalPlayer.CustomProperties[_customPropertiesList.colorKey];
             foreach (Transform childTf in _myRotChangeObj.transform)
             {
@@ -89,7 +90,7 @@ namespace GameScene
                         if (grandchildTf.CompareTag(_tagList.starTag))
                         {
                             Renderer renderer = grandchildTf.GetComponent<Renderer>();
-
+                            Debug.Log("renderer" + renderer);
                             renderer.material.color=new Color(colorArray[0], colorArray[1], colorArray[2]);
 
                             renderer.material.EnableKeyword("_EMISSION");
