@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 2161134270658394300}
   - component: {fileID: 2161134270658394301}
   m_Layer: 0
-  m_Name: RotChange12
+  m_Name: RotChange11
   m_TagString: RotChange
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -179,7 +179,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2161134271491198626
 Transform:
   m_ObjectHideFlags: 0

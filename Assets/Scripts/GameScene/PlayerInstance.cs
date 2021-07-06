@@ -98,6 +98,10 @@ namespace GameScene
                         }
                     }
                 }
+                else if (childTf.CompareTag(_tagList.mainCmTag))
+                {
+                    childTf.gameObject.SetActive(true);
+                }
             }
             //ä÷êîÇ…Ç∑ÇÍÇŒÇÊÇ©Ç¡ÇΩÅc
             _prevCamera.SetActive(false);
