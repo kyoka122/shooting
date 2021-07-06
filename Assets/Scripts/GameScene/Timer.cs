@@ -19,7 +19,7 @@ namespace GameScene
         }
         private void Update()
         {
-            Debug.Log(endTime - unchecked(PhotonNetwork.ServerTimestamp));
+            //Debug.Log(endTime - unchecked(PhotonNetwork.ServerTimestamp));
             if (endTime - unchecked(PhotonNetwork.ServerTimestamp) < 0)
             {
                 //arrowManager.generateArrow = false;

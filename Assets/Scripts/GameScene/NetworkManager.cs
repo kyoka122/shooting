@@ -157,8 +157,8 @@ namespace GameScene
                     Debug.Log("_scoreManager" + _scoreManager);
                     Debug.Log("targetPlayer" + targetPlayer);
                     Debug.Log("changedProps[_propertiesList.scoreKey]: "+changedProps[_propertiesList.scoreKey]);
-                    
-                    _scoreManager.SortMemberScore(targetPlayer, (int)changedProps[_propertiesList.scoreKey]);
+                    int num = (int)changedProps[_propertiesList.scoreKey];
+                    _scoreManager.SortMemberScore(targetPlayer, num);
                 }
                 else if(_gameManager.Readstate() == State.ScoreSent)
                 {
