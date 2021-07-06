@@ -154,25 +154,27 @@ namespace GameScene
                     Debug.Log("startaKey");
                     _gameManager.CheckStart(targetPlayer, changedProps);
                 }
-                else if (_gameManager.Readstate() == State.Playing)
-                {
-                    Debug.Log("_scoreManager" + _scoreManager);
-                    Debug.Log("targetPlayer" + targetPlayer);
-                    Debug.Log("changedProps[_propertiesList.scoreKey]: "+changedProps[_propertiesList.scoreKey]);
-                    if (changedProps[_propertiesList.scoreKey]is int a)
-                    {
-                        Debug.Log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvv: "+a);
-                    }
-
-                    int num = (int)changedProps[_propertiesList.scoreKey];
-                    _scoreManager.SortMemberScore(targetPlayer, num);
-                }
+                
                 else if(_gameManager.Readstate() == State.ScoreSent)
                 {
                     Debug.Log("scoreKey");
                     _resultmanager = FindObjectOfType<ResultManager>();
                     _resultmanager.CheckScoreSet(targetPlayer, changedProps);
                 }
+
+            }
+            if (_gameManager.Readstate() == State.Playing)
+            {
+                Debug.Log("_scoreManager" + _scoreManager);
+                Debug.Log("targetPlayer" + targetPlayer);
+                Debug.Log("changedProps[_propertiesList.scoreKey]: " + changedProps[_propertiesList.scoreKey]);
+                if (changedProps[_propertiesList.scoreKey] is int a)
+                {
+                    Debug.Log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvv: " + a);
+                }
+
+                int num = (int)changedProps[_propertiesList.scoreKey];
+                _scoreManager.SortMemberScore(targetPlayer, num);
             }
         }
 
