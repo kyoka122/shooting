@@ -133,7 +133,7 @@ namespace GameScene
            
             _timer.enabled = true;
             await _arrowManager.StartShooting(_linkedToken_Dly.Token, _myRotObj);
-            Debug.LogError("Task脱出");
+            Debug.Log("Task脱出");
             _myRotManager.enabled = false;//途中で終わったらエラー出る
             //アニメーション（ラウンド１結果発表）
             state = State.ScoreSent;
