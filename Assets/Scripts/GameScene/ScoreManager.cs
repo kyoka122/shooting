@@ -35,6 +35,7 @@ public class ScoreManager : MonoBehaviour
             }
             else
             {
+                _propertiesManager.PlayerCustomPropertiesSettings(0, _propertiesList.scoreKey, PhotonNetwork.LocalPlayer);
                 firstScore = 0;
             }
             _playerScore.Add(firstScore);

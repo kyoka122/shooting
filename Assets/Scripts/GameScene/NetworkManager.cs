@@ -7,6 +7,7 @@ using RoomScene;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace GameScene
 {
@@ -73,13 +74,14 @@ namespace GameScene
         // Pun Callbacks ////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////
 
- 
 
+        private string _roomScene = "RoomScene";
         // PhotonÇ©ÇÁêÿífÇ≥ÇÍÇΩéû
         public override void OnDisconnected(DisconnectCause cause)
         {
             Debug.Log("OnDisconnected");
             Debug.Log(cause);
+            SceneManager.LoadScene(_roomScene);
         }
 
         // ïîâÆÇ…ì¸é∫ÇµÇΩéû
@@ -157,6 +159,11 @@ namespace GameScene
                     Debug.Log("_scoreManager" + _scoreManager);
                     Debug.Log("targetPlayer" + targetPlayer);
                     Debug.Log("changedProps[_propertiesList.scoreKey]: "+changedProps[_propertiesList.scoreKey]);
+                    if (changedProps[_propertiesList.scoreKey]is int a)
+                    {
+                        Debug.Log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvv: "+a);
+                    }
+
                     int num = (int)changedProps[_propertiesList.scoreKey];
                     _scoreManager.SortMemberScore(targetPlayer, num);
                 }
