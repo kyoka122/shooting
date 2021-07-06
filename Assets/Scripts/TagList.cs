@@ -9,6 +9,6 @@ public class TagList
     public string mainCmTag { get => "MainCamera"; }
     public string sphereTag { get => "sphereBody"; }
 
-    public string starTag { get => "star"; }
+    public string starTag { get => "Star"; }
     public string arrowTag { get => "arrow"; }
 }

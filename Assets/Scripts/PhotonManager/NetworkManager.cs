@@ -134,7 +134,8 @@ namespace Photonmanager
 
             ExitGames.Client.Photon.Hashtable customproperties = new ExitGames.Client.Photon.Hashtable
             {
-                {_propertiesList.roundKey,1 }
+                {_propertiesList.roundKey,1 },
+                {_propertiesList.scoreKey,0 }
             };
             roomOptions.CustomRoomProperties = customproperties;
 

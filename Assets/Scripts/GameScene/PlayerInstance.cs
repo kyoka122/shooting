@@ -26,6 +26,7 @@ namespace GameScene
         CustomPropertiesList _customPropertiesList=new CustomPropertiesList();
         [System.NonSerialized] public GameObject _myRotChangeObj;
         [SerializeField] private GameObject _prevCamera;
+        [SerializeField] GameObject center;
         //[SerializeField] private ArrowManager _arrowManager;
 
         public async UniTask<GameObject> InstancePlayer(CancellationToken token)
@@ -50,7 +51,9 @@ namespace GameScene
             _myPlayerObjName= _resourceList.PlayerObjArray(_myPlayerNum);
 
             _rotChangeObj = PhotonNetwork.Instantiate(_myPlayerObjName, transform.position, transform.rotation);
-            
+            _rotChangeObj.transform.SetParent(center.transform);
+            _rotChangeObj.transform.localPosition = new Vector3(0, 0, 0);
+
             foreach (int n in _scBool_Up) {
                 if (_myPlayerNum==n)
                 {
@@ -90,7 +93,7 @@ namespace GameScene
                             renderer.material.color=new Color(colorArray[0], colorArray[1], colorArray[2]);
 
                             renderer.material.EnableKeyword("_EMISSION");
-                            renderer.material.SetColor("_EmissionColor", new Color(colorArray[0]*colorArray[4], colorArray[1]*colorArray[4], colorArray[2]*colorArray[4]));
+                            renderer.material.SetColor("_EmissionColor", new Color(colorArray[0]*colorArray[3], colorArray[1]*colorArray[3], colorArray[2]*colorArray[3]));
                         }
                     }
                 }
