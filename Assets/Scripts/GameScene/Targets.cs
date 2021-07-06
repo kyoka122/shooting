@@ -20,13 +20,12 @@ namespace GameScene
         public void OnTriggerEnter(Collider other)
         {
             
-            targetManager = FindObjectOfType<TargetManager>();
-            PhotonView photonView = targetManager.gameObject.GetComponent<PhotonView>();
-            photonView.RPC(_resourceList.TargetDestroyRPC, PhotonNetwork.MasterClient, photonView.ViewID);
-
             if (other.gameObject.GetComponent<PhotonView>().Owner == PhotonNetwork.LocalPlayer)
             {
                 Debug.Log("hit!!!");
+                targetManager = FindObjectOfType<TargetManager>();
+                PhotonView photonView = targetManager.gameObject.GetComponent<PhotonView>();
+                photonView.RPC(_resourceList.TargetDestroyRPC, PhotonNetwork.MasterClient, photonView.ViewID);
                 scoreManager = FindObjectOfType<ScoreManager>();
                 targetManager.TargetInstance();          
                 scoreManager.UpdateScore(lowPoint);

@@ -12,6 +12,7 @@ namespace GameScene
         List<GameObject> _targetList = new List<GameObject>();
         private ResourceList _resourceList=new ResourceList();
 
+        [PunRPC]
         public void TargetInstance()
         {
             float parts = Random.value;
