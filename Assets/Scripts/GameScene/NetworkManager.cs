@@ -30,7 +30,7 @@ namespace GameScene
         [SerializeField] private bool isOpen = true;
 
         // •”‰®–¼
-        [SerializeField] private string roomName = "Room";
+        //private string _gameScene = "GameScene";
 
         private string _nickName;
         private Photonmanager.CustomPropertiesList _propertiesList = new Photonmanager.CustomPropertiesList();

@@ -27,8 +27,8 @@ namespace GameScene
     public class GameManager : MonoBehaviourPunCallbacks
     {
         private int maxNum = 20;
+        private string roomName = "Room";
         private string _gameScene = "GameScene";
-
         private MyRotManager _myRotManager;
         private GameObject _myRotObj;
         private int _round;
