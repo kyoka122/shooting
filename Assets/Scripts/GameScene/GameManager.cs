@@ -28,7 +28,7 @@ namespace GameScene
     {
         private int maxNum = 20;
         private string _gameScene = "GameScene";
-        private string _roomScene = "RoomScene";
+
         private MyRotManager _myRotManager;
         private GameObject _myRotObj;
         private int _round;
@@ -168,7 +168,7 @@ namespace GameScene
 
                     Debug.Log("GameFinish");
                     _networkManager.LeaveConnect();
-                    SceneManager.LoadScene(_roomScene);
+                    
                 }
             }
         }

@@ -19,9 +19,9 @@ namespace GameScene
             if (other.gameObject.GetComponent<PhotonView>().Owner == PhotonNetwork.LocalPlayer)
             {
                 targetManager = FindObjectOfType<TargetManager>();
-                scoreManager = FindObjectOfType<ScoreManager>();
-                targetManager.TargetInstance();
                 targetManager.TargetDestroy(gameObject);
+                scoreManager = FindObjectOfType<ScoreManager>();
+                targetManager.TargetInstance();          
                 scoreManager.UpdateScore(lowPoint);
                 //当たったよ表示（ワールド座標でImageで名前と得点（それかプレイヤーリストに））
             }
