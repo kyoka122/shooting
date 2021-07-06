@@ -23,6 +23,7 @@ namespace Photonmanager
         public string SortMScoreRPC { get => "SortMemberScore"; }
 
         public string TargetDestroyRPC{get => "TargetDestroy";   }
+        public string TargetInstanceRPC{get => "TargetInstance";   }
         public string PlayerObjArray(int num)
         {
             str[0] = rotChangeObj;

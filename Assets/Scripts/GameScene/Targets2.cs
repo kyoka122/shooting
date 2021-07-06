@@ -18,8 +18,8 @@ namespace GameScene
         {
             
             _targetManager = FindObjectOfType<TargetManager>();
-
-            _targetManager.gameObject.GetComponent<PhotonView>().RPC(_resourceList.TargetDestroyRPC, PhotonNetwork.MasterClient, photonView.ViewID);
+            PhotonView photonView = _targetManager.gameObject.GetComponent<PhotonView>();
+            photonView.RPC(_resourceList.TargetDestroyRPC, PhotonNetwork.MasterClient, photonView.ViewID);
             if (other.gameObject.GetComponent<PhotonView>().Owner == PhotonNetwork.LocalPlayer)
             {
                 Debug.Log("hit2!!!");

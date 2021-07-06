@@ -9,7 +9,7 @@ namespace GameScene
 {
     //TargetObjectÇ…Ç¬ÇØÇÈ
     //ì_êîí·Ç¢ï˚
-    public class Targets : MonoBehaviourPunCallbacks
+    public class Targets : MonoBehaviour
     {
         TargetManager targetManager;
         PhotonView _photonView_target;
@@ -21,7 +21,8 @@ namespace GameScene
         {
             
             targetManager = FindObjectOfType<TargetManager>();
-            targetManager.gameObject.GetComponent<PhotonView>().RPC(_resourceList.TargetDestroyRPC, PhotonNetwork.MasterClient, photonView.ViewID);
+            PhotonView photonView = targetManager.gameObject.GetComponent<PhotonView>();
+            photonView.RPC(_resourceList.TargetDestroyRPC, PhotonNetwork.MasterClient, photonView.ViewID);
 
             if (other.gameObject.GetComponent<PhotonView>().Owner == PhotonNetwork.LocalPlayer)
             {
