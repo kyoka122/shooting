@@ -35,6 +35,8 @@ namespace GameScene
             }
             _targetList.Add(PhotonNetwork.InstantiateRoomObject(_target, new Vector3(random[0], random[1], random[2]),Quaternion.Euler(random[3], random[4], random[5])));
         }
+
+        [PunRPC]
         public void TargetDestroy(GameObject desObj)
         {
             _targetList.Remove(desObj);

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Photonmanager
 {
-    public class ResourceList 
+    public class ResourceList
     {
         public string rotChangeObj { get => "RotChange"; }
         public string arrowObj { get => "Arrow"; }
@@ -21,6 +21,8 @@ namespace Photonmanager
         public string gameRPC { get => "Game"; }
 
         public string SortMScoreRPC { get => "SortMemberScore"; }
+
+        public string TargetDestroyRPC{get => "TargetDestroy";   }
         public string PlayerObjArray(int num)
         {
             str[0] = rotChangeObj;

@@ -2,7 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Photonmanager;
 namespace GameScene
 {
     public class Targets2 : MonoBehaviour
@@ -10,14 +10,19 @@ namespace GameScene
         //TargetObjectÇ…Ç¬ÇØÇÈ
         //ì_êîçÇÇ¢ï˚
         TargetManager _targetManager;
+        PhotonView _photonView_target;
         ScoreManager _scoreManager;
         [SerializeField] private int highPoint = 500;
+        private ResourceList _resourceList = new ResourceList();
         public void OnTriggerEnter(Collider other)
         {
+            
+            _targetManager = FindObjectOfType<TargetManager>();
+
+            _targetManager.gameObject.GetComponent<PhotonView>().RPC(_resourceList.TargetDestroyRPC, PhotonNetwork.MasterClient, photonView.ViewID);
             if (other.gameObject.GetComponent<PhotonView>().Owner == PhotonNetwork.LocalPlayer)
             {
                 Debug.Log("hit2!!!");
-                _targetManager = FindObjectOfType<TargetManager>();
                 _scoreManager = FindObjectOfType<ScoreManager>();
                 _targetManager.TargetInstance();
                 _targetManager.TargetDestroy(gameObject);
