@@ -26,7 +26,7 @@ namespace GameScene
         [SerializeField] private GameObject _resultPanel;
 
         //NetworkManager‚É“ü‚ê‚éHH
-        public  void CheckScoreSet(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+        public void CheckScoreSet(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
         {
             //Master‚Ì‚İ’Ê‚é
             _players.Add(targetPlayer);
