@@ -860,7 +860,6 @@ MonoBehaviour:
   maxPlayers: 20
   isVisible: 1
   isOpen: 1
-  roomName: Room
   gameManagerObj: {fileID: 1096118037}
   _gameManager: {fileID: 1096118039}
   _scoreManager: {fileID: 557467356}
@@ -3708,7 +3707,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9edeaf0236486d149a81c43fd4c3160d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endTime: 10000
+  endTime: 20000
   arrowManager: {fileID: 2061546216}
 --- !u!4 &1471326576
 Transform:
