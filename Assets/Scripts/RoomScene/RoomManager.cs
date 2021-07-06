@@ -129,10 +129,15 @@ namespace RoomScene
             }
             else
             {
+
                 _gameSettings.SetColorProperties(_sphereColor.r , _sphereColor.g , _sphereColor.b ,value2);
                 _gameSettings.RoundSettings();
                 PhotonNetwork.IsMessageQueueRunning = false;
-                SceneManager.LoadScene(_gameScene);
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    SceneManager.LoadScene(_gameScene);
+                }
+                
             }            
            
         }
