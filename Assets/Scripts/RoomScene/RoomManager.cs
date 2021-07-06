@@ -13,7 +13,7 @@ using System;
 
 namespace RoomScene
 {
-    public class RoomManager : MonoBehaviour
+    public class RoomManager : MonoBehaviourPunCallbacks
     {
         private float value;
         [SerializeField] private const float intensity = 1.8f;//emission‚Ìintensity‚Ì’l‚ðˆê’è‚É

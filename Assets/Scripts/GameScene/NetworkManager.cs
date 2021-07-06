@@ -44,7 +44,8 @@ namespace GameScene
         /////////////////////////////////////////////////////////////////////////////////////
         private void Awake()
         {
-            PhotonNetwork.AddCallbackTarget(this);
+            Debug.Log("AddTarget");
+            PhotonNetwork.IsMessageQueueRunning = true;
         }
 
         public void LeaveConnect()
@@ -132,16 +133,17 @@ namespace GameScene
             Debug.Log("OnRoomListUpdate");
         }
 
-
+        //public virtual void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
         // ルームプロパティが更新された時
         public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
         {
-            Debug.Log("OnRoomPropertiesUpdate");
+            Debug.Log("OnRoomPropertiesUpdate GameScene");
         }
 
+        //public virtual void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
         public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
         {
-            Debug.Log("OnPlayerPropertiesUpdate");
+            Debug.Log("OnPlayerPropertiesUpdate GameScene");
             if (PhotonNetwork.IsMasterClient)
             {
                 Debug.Log("targetPlayer"+targetPlayer);
@@ -152,11 +154,13 @@ namespace GameScene
                 }
                 else if (_gameManager.Readstate() == State.Playing)
                 {
+                    Debug.Log("scoreKey"+changedProps[_propertiesList.scoreKey]);
                     _scoreManager.SortMemberScore(targetPlayer, (int)changedProps[_propertiesList.scoreKey]);
                 }
                 else if(_gameManager.Readstate() == State.ScoreSent)
                 {
                     Debug.Log("scoreKey");
+                    _resultmanager = FindObjectOfType<ResultManager>();
                     _resultmanager.CheckScoreSet(targetPlayer, changedProps);
                 }
             }

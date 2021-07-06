@@ -6,7 +6,7 @@ using UnityEngine;
 using RoomScene;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-
+using GameScene;
 /// <summary>
 /// 
 /// Unity 2019.1.11f1
@@ -43,12 +43,6 @@ namespace Photonmanager
         private CustomPropertiesList _propertiesList=new CustomPropertiesList();
 
         [SerializeField] RoomManager _roomManager;
-
-        public override void OnDisable()
-        {
-            Debug.Log("RemoveCallbackTarget");
-            PhotonNetwork.RemoveCallbackTarget(this);
-        }
 
 
         /////////////////////////////////////////////////////////////////////////////////////
@@ -316,6 +310,9 @@ namespace Photonmanager
         public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
         {
             Debug.Log("OnPlayerPropertiesUpdate");
+  
         }
+
+    
     }
 }

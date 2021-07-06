@@ -77,7 +77,7 @@ namespace GameScene
             _gameSettings = FindObjectOfType<StartGameSettings>();
             _resultManager = FindObjectOfType<ResultManager>();     
             _scoreManager.SetScore();
-
+            
             if (PhotonNetwork.IsMasterClient)
             {
                 for (int i = 0; i < 10; i++)
@@ -85,13 +85,11 @@ namespace GameScene
                     _targetManager.TargetInstance();
                 }
             }
-
-            Debug.Log("rrrrrrrrrrrrrrrrrrrrrrrrrr");
             _cancellationTokenSource_Ist = new CancellationTokenSource();
             _linkedToken_Ist = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource_Ist.Token, this.GetCancellationTokenOnDestroy());
             _myRotObj = await _playerInstance.InstancePlayer(_linkedToken_Ist.Token);//引数入れる？
                                                                                      //アニメーション
-            Debug.Log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");                                                 
+                                            
             _myRotManager = _myRotObj.GetComponent<MyRotManager>();
             _myRotManager.enabled = true;
             state = State.StartSetUp;
@@ -111,7 +109,7 @@ namespace GameScene
         //Masterのみ通る
         public void CheckStart(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
         {
-            Debug.Log("bbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+
             Debug.Log(targetPlayer);
             _players.Add(targetPlayer);
             Debug.Log("ready: "+PhotonNetwork.CurrentRoom.PlayerCount);
@@ -174,10 +172,7 @@ namespace GameScene
                 }
             }
         }
-        public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
-        {
-            Debug.Log("OnPlayerPropertiesUpdateaa");
-        }
+
 
     }
 }
