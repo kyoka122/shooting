@@ -37,7 +37,7 @@ namespace Photonmanager
         [SerializeField] private bool isOpen = true;
 
         // ïîâÆñº
-        [SerializeField] private string roomName = "Room";
+        private string _roomName ;
 
         private string _nickName;
         private CustomPropertiesList _propertiesList=new CustomPropertiesList();
@@ -51,10 +51,12 @@ namespace Photonmanager
 
 
         // Start is called before the first frame update
-        public void ConectSettings(string nickname)
+        public void ConectSettings(string nickname,string inputRoomName)
         {
             _nickName = nickname;
-            PhotonNetwork.AutomaticallySyncScene = true;
+            _roomName = inputRoomName;
+
+            PhotonNetwork.AutomaticallySyncScene = false;
             PhotonNetwork.ConnectUsingSettings();
         }
 
@@ -134,15 +136,15 @@ namespace Photonmanager
 
             ExitGames.Client.Photon.Hashtable customproperties = new ExitGames.Client.Photon.Hashtable
             {
-                {_propertiesList.roundKey,1 },
-                {_propertiesList.scoreKey,0 }
+                {1,_propertiesList.roundKey },
+                {0,_propertiesList.scoreKey }
             };
             roomOptions.CustomRoomProperties = customproperties;
 
             // ì¸é∫ (ë∂ç›ÇµÇ»ÇØÇÍÇŒïîâÆÇçÏê¨ÇµÇƒì¸é∫Ç∑ÇÈ)
             if (PhotonNetwork.InLobby)
             {
-                PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
+                PhotonNetwork.JoinOrCreateRoom(_roomName, roomOptions, TypedLobby.Default);
             }
         }
 

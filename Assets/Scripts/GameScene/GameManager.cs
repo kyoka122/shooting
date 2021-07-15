@@ -18,6 +18,7 @@ namespace GameScene
 {
     public enum State
     {
+        None,
         StartSetUp,
         ScoreSent,
         Playing,
@@ -32,7 +33,10 @@ namespace GameScene
         private MyRotManager _myRotManager;
         private GameObject _myRotObj;
         private int _round;
-        
+        private bool _rpcbool_game=true;
+
+        private CancellationTokenSource _cancellationTokenSource_Fst;
+        private CancellationTokenSource _linkedToken_Fst;
 
         private CancellationTokenSource _cancellationTokenSource_Ist;
         private CancellationTokenSource _linkedToken_Ist;
@@ -46,19 +50,24 @@ namespace GameScene
         private CustomPropertiesList _customProperties=new CustomPropertiesList();
         private ResourceList _resourceList = new ResourceList();
 
-        private ScoreManager _scoreManager;
+
         private List<Player> _players=new List<Player>();
-        //[SerializeField] MyRotManager myRotManager;
         private NetworkManager _networkManager;
-        private Timer _timer;
+
         private PlayerInstance _playerInstance;
-        private ArrowManager _arrowManager;
-        private StartGameSettings _gameSettings;//あとでRoomシーンに移す
-        private ResultManager _resultManager;
+
+        //private StartGameSettings _gameSettings;//あとでRoomシーンに移す
+
         private TargetManager _targetManager;
-        [SerializeField] State state;
+        [SerializeField]private ArrowManager _arrowManager;
+        [SerializeField] private ResultManager _resultManager;
+        [SerializeField] private ScoreManager _scoreManager;
+        [SerializeField] private Timer _timer;
+
+        [SerializeField] State state=State.None;
 
         
+
         public State Readstate()
         {
             return state;
@@ -66,18 +75,22 @@ namespace GameScene
 
         private async void Awake()
         {
+            _cancellationTokenSource_Fst = new CancellationTokenSource();
+            _linkedToken_Fst = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource_Fst.Token, this.GetCancellationTokenOnDestroy());
+            
+            //PhotonNetwork.IsMessageQueueRunning = true;
             //_propertiesManager.PlayerCustomPropertiesSettings(false, _customProperties.startKey, PhotonNetwork.LocalPlayer);
             //_gameSettings.RoundSettings();
-            _scoreManager = FindObjectOfType<ScoreManager>();
+            //_scoreManager = FindObjectOfType<ScoreManager>();
             _targetManager = FindObjectOfType<TargetManager>();
             _networkManager = FindObjectOfType<NetworkManager>();
-            _timer = FindObjectOfType<Timer>();
             _playerInstance = FindObjectOfType<PlayerInstance>();
-            _arrowManager = FindObjectOfType<ArrowManager>();
-            _gameSettings = FindObjectOfType<StartGameSettings>();
-            _resultManager = FindObjectOfType<ResultManager>();     
+            //_arrowManager = FindObjectOfType<ArrowManager>();
+            //_gameSettings = FindObjectOfType<StartGameSettings>();
+            _resultManager = FindObjectOfType<ResultManager>();
+            await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: _linkedToken_Fst.Token);
             _scoreManager.SetScore();
-            
+           
             if (PhotonNetwork.IsMasterClient)
             {
                 for (int i = 0; i < 10; i++)
@@ -88,9 +101,9 @@ namespace GameScene
             _cancellationTokenSource_Ist = new CancellationTokenSource();
             _linkedToken_Ist = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource_Ist.Token, this.GetCancellationTokenOnDestroy());
             _myRotObj = await _playerInstance.InstancePlayer(_linkedToken_Ist.Token);//引数入れる？
-                                                                                     //アニメーション
-                                            
+            Debug.Log("_myRotObj1: "+ _myRotObj);                                                                        //アニメーション           
             _myRotManager = _myRotObj.GetComponent<MyRotManager>();
+     
             _myRotManager.enabled = true;
             state = State.StartSetUp;
             if (PhotonNetwork.CurrentRoom.CustomProperties[_customProperties.startKey]is int)
@@ -109,15 +122,36 @@ namespace GameScene
         //Masterのみ通る
         public void CheckStart(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
         {
-
-            Debug.Log(targetPlayer);
-            _players.Add(targetPlayer);
-            Debug.Log("ready: "+PhotonNetwork.CurrentRoom.PlayerCount);
-            Debug.Log("playercount: "+ _players.Count);
-            if (_players.Count == PhotonNetwork.CurrentRoom.PlayerCount)
+            if (_rpcbool_game)
             {
-                GetComponent<PhotonView>().RPC(_resourceList.gameRPC,RpcTarget.AllViaServer);
+                if (state == State.Playing)
+                {
+                    if ((int)targetPlayer.CustomProperties[_customProperties.startKey] != (int)State.Playing)
+                    {
+                        return;
+                    }
+                }
+                else if (state == State.Playing2)
+                {
+                    if ((int)targetPlayer.CustomProperties[_customProperties.startKey] != (int)State.Playing2)
+                    {
+                        return;
+                    }
+                }
 
+                Debug.Log(targetPlayer);
+                if (!_players.Contains(targetPlayer))
+                {
+                    _players.Add(targetPlayer);
+                }
+
+                Debug.Log("ready: " + PhotonNetwork.CurrentRoom.PlayerCount);
+                Debug.Log("playercount: " + _players.Count);
+                if (_players.Count == PhotonNetwork.CurrentRoom.PlayerCount)
+                {
+                    _rpcbool_game = false;
+                    GetComponent<PhotonView>().RPC(_resourceList.gameRPC, RpcTarget.AllViaServer);
+                }
             }
         }
 
@@ -130,11 +164,12 @@ namespace GameScene
 
             _cancellationTokenSource_Dly = new CancellationTokenSource();
             _linkedToken_Dly = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource_Dly.Token, this.GetCancellationTokenOnDestroy());
-           
+            Debug.Log("_linkedToken_Dly.Token: "+ _linkedToken_Dly.Token);
+            Debug.Log("_myRotObj: " + _myRotObj);
             _timer.enabled = true;
             await _arrowManager.StartShooting(_linkedToken_Dly.Token, _myRotObj);
             Debug.Log("Task脱出");
-            _myRotManager.enabled = false;//途中で終わったらエラー出る
+
             //アニメーション（ラウンド１結果発表）
             state = State.ScoreSent;
             _propertiesManager.PlayerCustomPropertiesSettings(_scoreManager.ReadScore(),_customProperties.scoreKey, PhotonNetwork.LocalPlayer);
@@ -144,7 +179,8 @@ namespace GameScene
         [PunRPC]
         public async void DispResultRPC()//できるかな？
         {
-             _resultManager.Result();
+            Debug.Log("DispRPC");
+            _resultManager.Result();
            
             if (PhotonNetwork.IsMasterClient) {
                 _cancellationTokenSource_Shot = new CancellationTokenSource();

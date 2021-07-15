@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 using GameScene;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using UnityEngine.UI;
+using RoomScene;
 
 namespace DemoScene
 {
@@ -21,11 +23,11 @@ namespace DemoScene
         private CancellationTokenSource _linkedToken_Shot;
         //[SerializeField] MyRotManager myRotManager;
         [SerializeField] GameScene.Timer _timer;
-        [SerializeField] PlayerInstance _playerInstance;
+        [SerializeField] GameScene.PlayerInstance _playerInstance;
         [SerializeField]  ArrowManager _arrowManager;
         [SerializeField] StartGameSettings _gameSettings;//あとでRoomシーンに移す
-        [SerializeField] ResultManager _resultManager;
-
+        [SerializeField] ScoreManager _scoreManager;
+        [SerializeField] Text result;
         private async void Awake()
         {
             _cancellationTokenSource_Ist = new CancellationTokenSource();
@@ -39,6 +41,10 @@ namespace DemoScene
             _linkedToken_Ist = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource_Ist.Token, this.GetCancellationTokenOnDestroy());
             await _arrowManager.StartShooting(_linkedToken_Shot.Token, _myRotObj);
             _myRotManager.enabled = false;
+            _scoreManager = FindObjectOfType<ScoreManager>();
+            int score=_scoreManager.ReadScore();
+            result.gameObject.SetActive(true);
+            result.text = score.ToString();
             //アニメーション（ラウンド１結果発表）
             //_resultManager.Result();
             SceneManager.LoadScene(roomScene);

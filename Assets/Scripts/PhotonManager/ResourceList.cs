@@ -21,6 +21,8 @@ namespace Photonmanager
         public string gameRPC { get => "Game"; }
 
         public string SortMScoreRPC { get => "SortMemberScore"; }
+
+        public string setColorPropertiesRPC { get => "SetColorProperties"; }
         public string PlayerObjArray(int num)
         {
             str[0] = rotChangeObj;

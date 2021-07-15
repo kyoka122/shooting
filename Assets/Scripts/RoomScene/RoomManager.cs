@@ -20,11 +20,15 @@ namespace RoomScene
         private float value2;
 
         private string _inputStr;
+        private string _inputRoomName;
         private string _gameScene = "GameScene";
         private string _demoScene = "DemoScene";
         private InputField _inputField;
+        private InputField _inputField_Room;
         private Color _sphereColor=new Color(1f,0.325f,0.133f);
         private PlayMode _playMode;
+        private ResourceList _resourceList = new ResourceList();
+        [SerializeField]private PhotonView pV_gmsettings;
         [SerializeField] private Renderer _sphereRendere;
         [SerializeField] private GameObject _roomUI;
         [SerializeField] private GameObject _title;
@@ -34,6 +38,7 @@ namespace RoomScene
         [SerializeField] private RoomScene.PlayerInstance _playerInstance;
         [SerializeField] private StartGameSettings _gameSettings;
         [SerializeField] private GameObject _inputFieldObj;
+        [SerializeField] private GameObject _inputFieldRoomObj;
         [SerializeField] private GameObject _colorSetSphere;
         [SerializeField] private GameObject unitychan_OffLine;
         
@@ -76,7 +81,7 @@ namespace RoomScene
         public async UniTask RoomSettings_Online()
         {
             await MoveInputField();
-            _networkManager.ConectSettings(_inputStr);//PhotonÇ≈îÒìØä˙Ç≈Ç´ÇÈÇÊÇ§Ç…Ç»Ç¡ÇΩÇÁÅ´Ç©ÇÁPlayerInstanceåƒÇ‘ÅB
+            _networkManager.ConectSettings(_inputStr,_inputRoomName);//PhotonÇ≈îÒìØä˙Ç≈Ç´ÇÈÇÊÇ§Ç…Ç»Ç¡ÇΩÇÁÅ´Ç©ÇÁPlayerInstanceåƒÇ‘ÅB
         }
 
         public void InstanceAndSettings()
@@ -93,8 +98,15 @@ namespace RoomScene
             _title.SetActive(false);
             _inputFieldObj.SetActive(true);
             _inputField = _inputFieldObj.GetComponent<InputField>();
+            _inputField_Room = _inputFieldRoomObj.GetComponent<InputField>();
             CancellationToken token = this.GetCancellationTokenOnDestroy();
             _inputStr = await AwaitInputField(token);
+
+            _inputFieldObj.SetActive(false);
+            _inputFieldRoomObj.SetActive(true);
+
+            CancellationToken tokena = this.GetCancellationTokenOnDestroy();
+            _inputRoomName = await AwaitInputRoomNme(tokena);
         }
 
 
@@ -105,7 +117,13 @@ namespace RoomScene
             Debug.Log("InputNickName : " + input);
             return input;
         }
-
+        private async UniTask<string> AwaitInputRoomNme(CancellationToken token)
+        {
+            IAsyncEndEditEventHandler<string> handler = _inputField_Room.GetAsyncEndEditEventHandler(token);
+            string input = await handler.OnEndEditAsync();
+            Debug.Log("InputNickName : " + input);
+            return input;
+        }
         private void RoomSceneSettings()
         {
             value =191*(Mathf.Pow(Mathf.Exp(1),intensity * Mathf.Log(2f))/255);
@@ -129,18 +147,28 @@ namespace RoomScene
             }
             else
             {
-
-                _gameSettings.SetColorProperties(_sphereColor.r , _sphereColor.g , _sphereColor.b ,value2);
-                _gameSettings.RoundSettings();
-                PhotonNetwork.IsMessageQueueRunning = false;
                 if (PhotonNetwork.IsMasterClient)
                 {
-                    SceneManager.LoadScene(_gameScene);
+                    Debug.Log("pV_gmsettings: " + pV_gmsettings);
+                    pV_gmsettings.RPC(_resourceList.setColorPropertiesRPC, RpcTarget.AllViaServer, _sphereColor.r, _sphereColor.g, _sphereColor.b, value2);      
                 }
                 
             }            
            
         }
+        public void GameSettingsWait()
+        {
+            _gameSettings.RoundSettings();
+            //PhotonNetwork.IsMessageQueueRunning = false;
+            SceneManager.LoadScene(_gameScene);
+        }
+
+
+
+
+
+
+
 
 
 

@@ -3,12 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UniRx;
 using Photon.Pun;
 using Photon.Realtime;
 using Photonmanager;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace GameScene
 {
@@ -17,6 +15,7 @@ namespace GameScene
         private int _properChangedNum;
         private List<Player> _players=new List<Player>();
         private List<int> _playerscore=new List<int>();
+        private bool rpcbool_dispresult=true;
         private ResourceList resourceList = new ResourceList();
         private CustomPropertiesList _propertiesList = new CustomPropertiesList();
         //private ScoreManager _scoreManager;
@@ -24,6 +23,7 @@ namespace GameScene
         [SerializeField] GameObject[] _scoreTextObj=new GameObject[20];
         [SerializeField] private PhotonView _photonView_GM;
         [SerializeField] private GameObject _resultPanel;
+        [SerializeField] private ScoreManager _scoreManager;
 
         //NetworkManagerに入れる？？
         public void CheckScoreSet(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
@@ -34,8 +34,12 @@ namespace GameScene
             _playerscore.Add((int)targetPlayer.CustomProperties[_propertiesList.scoreKey]);
             if (_players.Count == PhotonNetwork.CurrentRoom.PlayerCount)
             {
-                _photonView_GM.RPC(resourceList.dispResultRPC, RpcTarget.AllViaServer);
-                //通信切れたら？？←今回は無視
+                if (rpcbool_dispresult)
+                {
+                    rpcbool_dispresult = false;
+                    _photonView_GM.RPC(resourceList.dispResultRPC, RpcTarget.AllViaServer);
+                    //通信切れたら？？←今回は無視
+                }
 
             }
 
@@ -44,6 +48,9 @@ namespace GameScene
 
         public void Result()
         {
+            List<Player> plList = _scoreManager.ReadAllPlayer();
+            List<int> plScoreList = _scoreManager.ReadAllScore();
+
             _resultPanel.SetActive(true);
             int playerCount;
             int prevMax=0;
@@ -51,21 +58,21 @@ namespace GameScene
             int max=0;
             int maxPrListNm = 0;
             //list.Sort((a, b) => b - a);
-            for (int i=0; (playerCount=_players.Count)!=0; i++)
+            for (int i=0; (playerCount= plList.Count)!=0; i++)
             {
                 _scoreTextObj[i].SetActive(true);
                 for (int j=0; j < playerCount; j++)
                 {
                     if (j == 0)
                     {
-                        max = _playerscore[j];
+                        max = plScoreList[j];
                         maxPrListNm = 0;
                     }
                     else
                     {
-                        if (max<=_playerscore[j])
+                        if (max<= plScoreList[j])
                         {
-                            max = _playerscore[j];
+                            max = plScoreList[j];
                             maxPrListNm = j;
                         }
                         
@@ -74,17 +81,17 @@ namespace GameScene
                 if (prevMax==max)
                 {
                     Debug.Log("ResultTextEdit(same)");
-                    _scoreText[i].text = (prevRank+"  "+ _players[maxPrListNm].NickName+"  "+prevMax+"\n");
+                    _scoreText[i].text = (prevRank+"  "+ plList[maxPrListNm].NickName+"  "+prevMax+"\n");
                 }
                 else
                 {
                     Debug.Log("ResultTextEdit");
-                    _scoreText[i].text = (i+1 + "  " + _players[maxPrListNm].NickName + "  " + max + "\n");
+                    _scoreText[i].text = (i+1 + "  " + plList[maxPrListNm].NickName + "  " + max + "\n");
                     prevMax = max;
                     prevRank = i+1;
                 }
-                _players.RemoveAt(maxPrListNm);
-                _playerscore.RemoveAt(maxPrListNm);
+                plList.RemoveAt(maxPrListNm);
+                plScoreList.RemoveAt(maxPrListNm);
             }
             
 

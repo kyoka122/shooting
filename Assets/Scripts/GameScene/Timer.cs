@@ -11,20 +11,26 @@ namespace GameScene
         //1000=1s
         [SerializeField] private int endTime = 1000*5;
         [SerializeField] private ArrowManager arrowManager;
-
+        bool timeBool=true;
         private void Start()
         {
-            Debug.Log("first"+ PhotonNetwork.ServerTimestamp);
-            endTime +=PhotonNetwork.ServerTimestamp;
+            Debug.Log("first"+ unchecked(PhotonNetwork.ServerTimestamp));
+            endTime += unchecked(PhotonNetwork.ServerTimestamp);
         }
         private void Update()
         {
             //Debug.Log(endTime - unchecked(PhotonNetwork.ServerTimestamp));
-            if (endTime - unchecked(PhotonNetwork.ServerTimestamp) < 0)
+
+            if (timeBool&&endTime - unchecked(PhotonNetwork.ServerTimestamp) < 0)
             {
+                Debug.Log("Timer Finish");
                 //arrowManager.generateArrow = false;
-                arrowManager.TimeOver();
-                gameObject.SetActive(false);
+                timeBool = false;
+ 
+                    arrowManager.TimeOver();
+
+                //gameObject.GetComponent<Timer>().enabled=false;
+  
             }
         }
 

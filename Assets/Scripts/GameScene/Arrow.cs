@@ -14,17 +14,25 @@ namespace GameScene
         private float _posy;
         private float _posz;
         private float _radsquere;
+        private PhotonView _photonView;
+        private void Awake()
+        {
+            _photonView = GetComponent<PhotonView>();
+        }
         private void Update()
         {
-            _posx = transform.position.x;
-            _posy = transform.position.y;
-            _posz = transform.position.z;
-            if (_posx < -70 || 70 < _posx || _posy < -70 || 70 < _posy || _posz < -70 || 70 < _posz)
+            if (_photonView.Owner == PhotonNetwork.LocalPlayer)
             {
-                _radsquere = _posx * _posx + _posy * _posy + _posz * _posz;
-                if (_radsquere > 490)
+                _posx = transform.position.x;
+                _posy = transform.position.y;
+                _posz = transform.position.z;
+                if (_posx < -70 || 70 < _posx || _posy < -70 || 70 < _posy || _posz < -70 || 70 < _posz)
                 {
-                    PhotonNetwork.Destroy(gameObject);
+                    _radsquere = _posx * _posx + _posy * _posy + _posz * _posz;
+                    if (_radsquere > 490)
+                    {
+                        PhotonNetwork.Destroy(_photonView);
+                    }
                 }
             }
         }

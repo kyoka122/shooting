@@ -9,7 +9,7 @@ namespace GameScene
     public class TargetManager : MonoBehaviour
     {
         private string _target;
-        List<GameObject> _targetList = new List<GameObject>();
+        //List<GameObject> _targetList = new List<GameObject>();
         private ResourceList _resourceList=new ResourceList();
 
         public void TargetInstance()
@@ -33,21 +33,27 @@ namespace GameScene
             {
                 random[i] = Random.Range(0f, 360f);
             }
-            _targetList.Add(PhotonNetwork.InstantiateRoomObject(_target, new Vector3(random[0], random[1], random[2]),Quaternion.Euler(random[3], random[4], random[5])));
+            PhotonNetwork.InstantiateRoomObject(_target, new Vector3(random[0], random[1], random[2]), Quaternion.Euler(random[3], random[4], random[5]));
+            //_targetList.Add(PhotonNetwork.InstantiateRoomObject(_target, new Vector3(random[0], random[1], random[2]),Quaternion.Euler(random[3], random[4], random[5])));
         }
-        public void TargetDestroy(GameObject desObj)
+        public void TargetDestroy(PhotonView desObjView)
         {
-            _targetList.Remove(desObj);
-            Debug.Log("desObj :"+ desObj);
-            PhotonNetwork.Destroy(desObj);
+            //_targetList.Remove(desObjView.gameObject);
+            Debug.Log("desObj :"+ desObjView);
+            if (desObjView.gameObject!=null) {
+                desObjView.TransferOwnership(PhotonNetwork.LocalPlayer);
+                PhotonNetwork.Destroy(desObjView);
+            }
         }
 
+
+        //ëSïîMasterÇ≈ä«óùÇ∑Ç◊Ç´ÅHÅH
         public void TargetOff()
         {
-            foreach (GameObject list in _targetList)
+            /*foreach (GameObject list in _targetList)
             {
                 list.SetActive(false);
-            }
+            }*/
         }
     }
 }

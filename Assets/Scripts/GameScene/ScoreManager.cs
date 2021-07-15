@@ -19,6 +19,16 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private GameObject[] scoreTextObj = new GameObject[20];
     [SerializeField] private Text[] _scoreText = new Text[20];
 
+    public List<int> ReadAllScore()
+    {
+        return _playerScore;
+    }
+    public List<Player> ReadAllPlayer()
+    {
+        return _player;
+    }
+    
+
 
     public void SetScore()
     {
@@ -50,6 +60,11 @@ public class ScoreManager : MonoBehaviour
         //Sort
         int tmp;
         Player pltmp;
+        for (int i = 0; i < playerCount; i++)
+        {
+            Debug.Log("score1: "+ _playerScore[i]);
+            Debug.Log("player2: "+ _player[i]);
+        }
         for (int i=0; i< playerCount;i++)
         {
             for (int j = i + 1; j < playerCount;j++)
@@ -65,6 +80,11 @@ public class ScoreManager : MonoBehaviour
                 }
 
             }
+        }
+        for (int i = 0; i < playerCount; i++)
+        {
+            Debug.Log("score2: " + _playerScore[i]);
+            Debug.Log("player2: " + _player[i]);
         }
 
         //Text初期化
@@ -94,12 +114,13 @@ public class ScoreManager : MonoBehaviour
     public void SortMemberScore(Player player,int score)
     {
         int playerIndex = _player.IndexOf(player);
-
+        Debug.Log("playerIndex: "+playerIndex);
         //点数は必ず上がる前提
         int newIndex=playerIndex;
         newIndex--;
         for (;0<= newIndex; newIndex--)
         {
+            Debug.Log("sortfor1");
             if (_playerScore[newIndex] > score)
             {
                 _player.Insert(newIndex + 1, player);
@@ -111,16 +132,20 @@ public class ScoreManager : MonoBehaviour
             }
             
         }
+        Debug.Log("playerIndex=" + playerIndex);
+        Debug.Log("newIndex=" + newIndex);
         //変動ない場合はスコアの入れ替えだけ
         if (newIndex==-1)
         {
+            Debug.Log("sortnewIndex==1");
             Debug.Log("NotChange");
             _playerScore[playerIndex] = score;
             newIndex = playerIndex;
         }
         for (; newIndex <= playerIndex; newIndex++)
         {
-            _scoreText[newIndex].text = (newIndex + 1 + ". " + _player[newIndex].NickName + " : " + _playerScore[newIndex]);
+            Debug.Log("sortfor2:  newIndex="+ newIndex);
+            _scoreText[newIndex].text = (newIndex + 1 + ". " + _player[newIndex].NickName + " : " + _playerScore[newIndex]);//////////////////////////////////
         }
 
     }

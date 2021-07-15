@@ -17,9 +17,9 @@ namespace GameScene
             _arrowManager = FindObjectOfType<ArrowManager>();
         }
 
-        public void OnCollisionEnter(Collision collision)
+        public void OnTriggerEnter(Collider other)
         {
-            if (collision.gameObject.CompareTag(_tagList.arrowTag))
+            if (other.gameObject.GetComponent<PhotonView>().Owner != PhotonNetwork.LocalPlayer&& other.gameObject.CompareTag(_tagList.arrowTag))
             {
                 _arrowManager.Pause();
                 

@@ -45,8 +45,7 @@ namespace GameScene
         /////////////////////////////////////////////////////////////////////////////////////
         private void Awake()
         {
-            Debug.Log("AddTarget");
-            PhotonNetwork.IsMessageQueueRunning = true;
+            //PhotonNetwork.IsMessageQueueRunning = true;
         }
 
         public void LeaveConnect()

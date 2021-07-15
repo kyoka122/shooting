@@ -12,15 +12,16 @@ namespace GameScene
         private Rigidbody _arrowRb;
         private GameObject _arrowObj;
         private CancellationTokenSource _cancellationTokenSource;
-        private UniTaskCompletionSource _uniTaskCompletionSource;
         private CancellationTokenSource _linkedToken;
         private CancelCause _cancelCause = CancelCause.CANCEL;
+        private bool whileBool=true;
         //public bool gameFinish;
 
         //[SerializeField]ArrowManager arrowManager;
         private CameraManager _cameraManager;
         private ResourceList resource = new ResourceList();
         private GameObject _myRotChangeObj;
+        private string _destroyTime = "DestroyTime";
         //public bool generateArrow = true;
         [SerializeField] private PlayerInstance playerInstance;
         //[SerializeField] private ArrowGenerater arrowGenerater;
@@ -35,32 +36,39 @@ namespace GameScene
             CONTINUE
         }
 
-        public async UniTask StartShooting(CancellationToken token, GameObject myRotObj)
+        public async UniTask StartShooting(CancellationToken token,GameObject myRotChangeObj)
         {
             _cancellationTokenSource = new CancellationTokenSource();
             _linkedToken = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource.Token, this.GetCancellationTokenOnDestroy());
-            _myRotChangeObj = myRotObj;
+            //_myRotChangeObj = myRotObj;
             _cameraManager = FindObjectOfType<CameraManager>();//()内にtrueを入れると非アクティブも検索する(おー！)
             //CancellationTokenSource cancellationTokenSource=new CancellationTokenSource();
             //var token=cancellationTokenSource.Token;
+            Debug.Log("ArrowStart");
+            Debug.Log("myRotChangeObj: " + myRotChangeObj);
+            _myRotChangeObj = myRotChangeObj;
 
-            while (true)
+            while (whileBool)
             {
                 _cancelCause = CancelCause.CANCEL;
+
                 //await WaitClick(_linkedToken.Token).Forget();エラー出る
                 try
                 {
-                    await WaitClick(_linkedToken.Token);//値が変化するのを待つgenerateArrow=>false
+                    Debug.Log("LoopIn");
+                    await WaitClick(_linkedToken.Token);
+                    Debug.Log("LoopOut");
                 }
-                catch
+                catch (OperationCanceledException e)
                 {
+                    Debug.Log("error_Arrow: "+ e.Message);
                     if(_cancelCause == CancelCause.TIMEOVR|| _cancelCause == CancelCause.CANCEL)
                     {
                         break;
                     }
   
                 }
-                
+                Debug.Log("tryroop");
             }
             Debug.Log("Finish!");
             targetManager.TargetOff();
@@ -70,6 +78,8 @@ namespace GameScene
         private async UniTask WaitClick(CancellationToken token)
         {
             _arrowObj = PhotonNetwork.Instantiate(resource.arrowObj, transform.position, transform.rotation);
+            Debug.Log("_arrowObj+myRot: "+ _arrowObj+"+"+_myRotChangeObj);
+
             _arrowObj.transform.SetParent(_myRotChangeObj.transform);//一時的
             _arrowObj.transform.localRotation = Quaternion.Euler(85.95f, 0, 0);
             _arrowObj.transform.localPosition = new Vector3(-1f, 2.5f,0f);//一時的
@@ -78,12 +88,30 @@ namespace GameScene
             //_cameraManager.CameraZoom();
             //アニメーション
             await UniTask.WaitUntil(() => Input.GetMouseButtonUp(0), cancellationToken: token);
+            var components= _arrowObj.GetComponents<MonoBehaviour>();
+            foreach(var component in components)
+            {
+                Debug.Log(" getcomponent: " + component);
+                var type = component.GetType();
+                if (type == typeof(Targets) || type == typeof(Targets2))
+                {
+                    var setMethod = GetType().GetMethod(_destroyTime);
+                    if (setMethod != null)
+                    {
+                        setMethod.Invoke(this, null);
+                    }
+
+                }
+   
+            }
+
             Debug.Log("click");
 
-            Debug.Log("aaa");
             _arrowRb.AddRelativeForce(new Vector3(0,-50f,0),ForceMode.VelocityChange);
             //arrowRb.AddRelativeForce(_arrowObj.transform*-10f,ForceMode.VelocityChange);
+            Debug.Log("arrowparent1: "+ _arrowObj);
             _arrowObj.transform.parent = null;
+            Debug.Log("arrowparent2: "+ _arrowObj);
             _arrowObj.transform.parent = null;
             //_cameraManager.CameraOut();
             //click = true;
@@ -94,6 +122,7 @@ namespace GameScene
 
         public void Pause()
         {
+            Debug.Log("Pause");
             _cancelCause = CancelCause.CONTINUE;
             _linkedToken.Cancel();
         }
@@ -101,6 +130,7 @@ namespace GameScene
         public void TimeOver()
         {
             Debug.Log("TimeOver");
+            whileBool = false;
             _cancelCause = CancelCause.TIMEOVR;
             _linkedToken.Cancel();
         }
