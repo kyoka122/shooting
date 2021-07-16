@@ -26,6 +26,7 @@ namespace DemoScene
             await UniTask.Delay(TimeSpan.FromSeconds(6f), cancellationToken: _linkedToken.Token);
             if (gameObject)
             {
+                Debug.Log("desObj :" + gameObject);
                 Destroy(gameObject);
             }
 

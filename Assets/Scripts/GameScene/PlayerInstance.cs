@@ -20,7 +20,7 @@ namespace GameScene
         private TagList _tagList = new TagList();
         private ResourceList _resourceList=new ResourceList();
         private int[] _scBool_Up = { 1,2,4,5,7,8,10,11,13,14,16,17,19};
-        [ColorUsage(false, true)] private Color colorHDR;
+        
 
         //private GameObject _posChangeObj;
         CustomPropertiesList _customPropertiesList=new CustomPropertiesList();
@@ -80,25 +80,11 @@ namespace GameScene
 
             }
             Debug.Log("_myRotChangeObj" + _myRotChangeObj);
-            float[] colorArray=(float[])PhotonNetwork.LocalPlayer.CustomProperties[_customPropertiesList.colorKey];
+           
             foreach (Transform childTf in _myRotChangeObj.transform)
             {
-                if (childTf.CompareTag(_tagList.sphereTag))
-                {
-                    foreach (Transform grandchildTf in childTf)
-                    {
-                        if (grandchildTf.CompareTag(_tagList.starTag))
-                        {
-                            Renderer renderer = grandchildTf.GetComponent<Renderer>();
-                            Debug.Log("renderer" + renderer);
-                            renderer.material.color=new Color(colorArray[0], colorArray[1], colorArray[2]);
-
-                            renderer.material.EnableKeyword("_EMISSION");
-                            renderer.material.SetColor("_EmissionColor", new Color(colorArray[0]*colorArray[3], colorArray[1]*colorArray[3], colorArray[2]*colorArray[3]));
-                        }
-                    }
-                }
-                else if (childTf.CompareTag(_tagList.mainCmTag))
+         
+                if (childTf.CompareTag(_tagList.mainCmTag))
                 {
                     childTf.gameObject.SetActive(true);
                 }

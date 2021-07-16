@@ -31,6 +31,7 @@ namespace GameScene
                     _radsquere = _posx * _posx + _posy * _posy + _posz * _posz;
                     if (_radsquere > 490)
                     {
+                        Debug.Log("desObj :" + _photonView);
                         PhotonNetwork.Destroy(_photonView);
                     }
                 }

@@ -63,7 +63,7 @@ namespace GameScene
         [SerializeField] private ResultManager _resultManager;
         [SerializeField] private ScoreManager _scoreManager;
         [SerializeField] private Timer _timer;
-
+        [SerializeField] private GameObject _camera;
         [SerializeField] State state=State.None;
 
         
@@ -88,7 +88,7 @@ namespace GameScene
             //_arrowManager = FindObjectOfType<ArrowManager>();
             //_gameSettings = FindObjectOfType<StartGameSettings>();
             _resultManager = FindObjectOfType<ResultManager>();
-            await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: _linkedToken_Fst.Token);
+           
             _scoreManager.SetScore();
            
             if (PhotonNetwork.IsMasterClient)
@@ -221,6 +221,7 @@ namespace GameScene
         [PunRPC]
         public void LoadDisConnect()
         {
+            _camera.SetActive(true);
             _networkManager.LeaveConnect();
         }
     }

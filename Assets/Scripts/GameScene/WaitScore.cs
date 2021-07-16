@@ -10,9 +10,9 @@ namespace GameScene
 {
     public class WaitScore 
     {
-        public async UniTaskVoid SendScore(int playerNum)
+        /*public async UniTaskVoid SendScore(int playerNum)
         {
             Debug.Log("Num"+playerNum+" send");
-        }
+        }*/
     }
 }

@@ -46,13 +46,14 @@ namespace GameScene
             }
             if (gameObject != null)
             {
+                Debug.Log("desObj :" + gameObject);
                 PhotonNetwork.Destroy(gameObject);
             }
         }
 
         public void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag(_tagList.arrowTag))
+            if (other.CompareTag(_tagList.arrowChildTag))
             {
                 if (PhotonNetwork.IsMasterClient)
                 {
@@ -62,7 +63,8 @@ namespace GameScene
                     _targetManager.TargetInstance();
                     //当たったよ表示（ワールド座標でImageで名前と得点（それかプレイヤーリストに））
                 }
-                else if (other.gameObject.GetComponent<PhotonView>().Owner == PhotonNetwork.LocalPlayer)
+
+                if (other.transform.parent.gameObject.GetComponent<PhotonView>().Owner == PhotonNetwork.LocalPlayer)
                 {
                     _scoreManager.UpdateScore(lowPoint);
                     

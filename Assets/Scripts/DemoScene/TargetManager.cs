@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 namespace DemoScene
 { 
@@ -40,7 +41,7 @@ namespace DemoScene
         {
             //_targetList.Remove(desObjView.gameObject);
             Debug.Log("desObj :" + desObj);
-            Destroy(desObj);
+            PhotonNetwork.Destroy(desObj);
         }
 
 

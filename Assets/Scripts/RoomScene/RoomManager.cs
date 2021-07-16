@@ -19,6 +19,7 @@ namespace RoomScene
         [SerializeField] private const float intensity = 1.8f;//emission‚Ìintensity‚Ì’l‚ðˆê’è‚É
         private float value2;
 
+        private bool onceBool=true;
         private string _inputStr;
         private string _inputRoomName;
         private string _gameScene = "GameScene";
@@ -28,6 +29,9 @@ namespace RoomScene
         private Color _sphereColor=new Color(1f,0.325f,0.133f);
         private PlayMode _playMode;
         private ResourceList _resourceList = new ResourceList();
+        private CancellationTokenSource _cancellationTokenSource;
+        private CancellationTokenSource _linkedToken;
+        
         [SerializeField]private PhotonView pV_gmsettings;
         [SerializeField] private Renderer _sphereRendere;
         [SerializeField] private GameObject _roomUI;
@@ -139,30 +143,35 @@ namespace RoomScene
         //Button
         public void GameSettings()
         {
-            value2 = value / _sphereColor.maxColorComponent;
+            if (onceBool)
+            {
+                onceBool = false;
+                value2 = value / _sphereColor.maxColorComponent;
 
-            if (_playMode==PlayMode.Local)
-            {
-                SceneManager.LoadScene(_demoScene);
-            }
-            else
-            {
-                if (PhotonNetwork.IsMasterClient)
+                if (_playMode == PlayMode.Local)
                 {
-                    Debug.Log("pV_gmsettings: " + pV_gmsettings);
-                    _gameSettings.RoundSettings();
-                    pV_gmsettings.RPC(_resourceList.setColorPropertiesRPC, RpcTarget.All, _sphereColor.r, _sphereColor.g, _sphereColor.b, value2);      
+                    SceneManager.LoadScene(_demoScene);
                 }
-                
-            }            
-           
+                else
+                {
+                    if (PhotonNetwork.IsMasterClient)
+                    {
+                        Debug.Log("pV_gmsettings: " + pV_gmsettings);
+                        _gameSettings.RoundSettings();
+                        pV_gmsettings.RPC(_resourceList.setColorPropertiesRPC, RpcTarget.All, _sphereColor.r, _sphereColor.g, _sphereColor.b, value2);
+                    }
+
+                }
+            }
         }
-        public void GameSettingsWait()
+        public async void GameSettingsWait()
         {
-            
+            _cancellationTokenSource = new CancellationTokenSource();
+            _linkedToken = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource.Token, this.GetCancellationTokenOnDestroy());
             //PhotonNetwork.IsMessageQueueRunning = false;
-            PhotonNetwork.LoadLevel(_gameScene);
-            //SceneManager.LoadScene(_gameScene);
+            //PhotonNetwork.LoadLevel(_gameScene);
+            await UniTask.Delay(TimeSpan.FromSeconds(5f), cancellationToken: _linkedToken.Token);
+            SceneManager.LoadScene(_gameScene);
         }
 
 

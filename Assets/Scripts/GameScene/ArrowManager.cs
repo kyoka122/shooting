@@ -9,6 +9,9 @@ namespace GameScene
 {
     public class ArrowManager : MonoBehaviour
     {
+        private Vector3 _arrowPos=new Vector3(-5.88f,3.9f,-0.57f);
+        private Vector3 _arrowRot= new Vector3(-7.5f, 6.4f, -116.9f);
+        private Vector3 _arrowScale= new Vector3(2f, 2f, 2f);
         private Rigidbody _arrowRb;
         private GameObject _arrowObj;
         private CancellationTokenSource _cancellationTokenSource;
@@ -21,7 +24,8 @@ namespace GameScene
         private CameraManager _cameraManager;
         private ResourceList resource = new ResourceList();
         private GameObject _myRotChangeObj;
-        
+        private Transform _parent;
+        private Transform _parent2;
         //public bool generateArrow = true;
         [SerializeField] private PlayerInstance playerInstance;
         //[SerializeField] private ArrowGenerater arrowGenerater;
@@ -47,6 +51,9 @@ namespace GameScene
             Debug.Log("ArrowStart");
             Debug.Log("myRotChangeObj: " + myRotChangeObj);
             _myRotChangeObj = myRotChangeObj;
+            _parent = myRotChangeObj.transform.parent;
+            _parent2 = _parent.transform.parent;
+
 
             while (whileBool)
             {
@@ -80,24 +87,33 @@ namespace GameScene
             _arrowObj = PhotonNetwork.Instantiate(resource.arrowObj, transform.position, transform.rotation);
             Debug.Log("_arrowObj+myRot: "+ _arrowObj+"+"+_myRotChangeObj);
 
-            _arrowObj.transform.SetParent(_myRotChangeObj.transform);//一時的
-            _arrowObj.transform.localRotation = Quaternion.Euler(85.95f, 0, 0);
-            _arrowObj.transform.localPosition = new Vector3(-1f, 2.5f,0f);//一時的
+            _arrowObj.transform.SetParent(_myRotChangeObj.transform);
+            //await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: token);
+            _arrowObj.transform.localScale = _arrowScale;
+            //_arrowObj.transform.rotation = Quaternion.Euler(_arrowRot);
+             _arrowObj.transform.localRotation = Quaternion.Euler(_arrowRot);
+            _arrowObj.transform.localPosition = _arrowPos;
+     
+            Debug.Log("PosChange");
+           
+ 
             _arrowRb = _arrowObj.GetComponent<Rigidbody>();
             await UniTask.WaitUntil(() => Input.GetMouseButtonDown(0),cancellationToken:token);
-            //_cameraManager.CameraZoom();
+   
             //アニメーション
             await UniTask.WaitUntil(() => Input.GetMouseButtonUp(0), cancellationToken: token);
             
 
             Debug.Log("click");
 
-            _arrowRb.AddRelativeForce(new Vector3(0,-50f,0),ForceMode.VelocityChange);
+            //_arrowRb.AddRelativeForce(new Vector3(0,-50f,0),ForceMode.VelocityChange);
+            _arrowRb.AddRelativeForce(new Vector3(0,0,-50f),ForceMode.VelocityChange);
             //arrowRb.AddRelativeForce(_arrowObj.transform*-10f,ForceMode.VelocityChange);
             Debug.Log("arrowparent1: "+ _arrowObj);
             _arrowObj.transform.parent = null;
             Debug.Log("arrowparent2: "+ _arrowObj);
             _arrowObj.transform.parent = null;
+            _arrowObj = null;
             //_cameraManager.CameraOut();
             //click = true;
             await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: token);

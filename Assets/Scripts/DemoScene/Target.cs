@@ -4,6 +4,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using System;
+using Photon.Pun;
 
 namespace DemoScene
 {
@@ -25,6 +26,7 @@ namespace DemoScene
             await UniTask.Delay(TimeSpan.FromSeconds(6f), cancellationToken: _linkedToken.Token);
             if (gameObject)
             {
+                Debug.Log("desObj :" + gameObject);
                 Destroy(gameObject);
             }
 

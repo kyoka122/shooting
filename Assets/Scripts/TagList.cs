@@ -11,4 +11,5 @@ public class TagList
 
     public string starTag { get => "Star"; }
     public string arrowTag { get => "arrow"; }
+    public string arrowChildTag { get => "arrowchild"; }
 }
