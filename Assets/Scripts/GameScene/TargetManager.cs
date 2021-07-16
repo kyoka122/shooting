@@ -9,6 +9,7 @@ namespace GameScene
     public class TargetManager : MonoBehaviour
     {
         private string _target;
+        private string _destroyTime = "DestroyTime";
         //List<GameObject> _targetList = new List<GameObject>();
         private ResourceList _resourceList=new ResourceList();
 
@@ -33,7 +34,23 @@ namespace GameScene
             {
                 random[i] = Random.Range(0f, 360f);
             }
-            PhotonNetwork.InstantiateRoomObject(_target, new Vector3(random[0], random[1], random[2]), Quaternion.Euler(random[3], random[4], random[5]));
+            var rargetObj=PhotonNetwork.InstantiateRoomObject(_target, new Vector3(random[0], random[1], random[2]), Quaternion.Euler(random[3], random[4], random[5]));
+            var components = rargetObj.GetComponents<MonoBehaviour>();
+            foreach (var component in components)
+            {
+                Debug.Log(" getcomponent: " + component);
+                var type = component.GetType();
+                if (type == typeof(Targets) || type == typeof(Targets2))
+                {
+                    var setMethod = GetType().GetMethod(_destroyTime);
+                    if (setMethod != null)
+                    {
+                        setMethod.Invoke(this, null);
+                    }
+
+                }
+
+            }
             //_targetList.Add(PhotonNetwork.InstantiateRoomObject(_target, new Vector3(random[0], random[1], random[2]),Quaternion.Euler(random[3], random[4], random[5])));
         }
         public void TargetDestroy(PhotonView desObjView)
@@ -41,7 +58,6 @@ namespace GameScene
             //_targetList.Remove(desObjView.gameObject);
             Debug.Log("desObj :"+ desObjView);
             if (desObjView.gameObject!=null) {
-                desObjView.TransferOwnership(PhotonNetwork.LocalPlayer);
                 PhotonNetwork.Destroy(desObjView);
             }
         }

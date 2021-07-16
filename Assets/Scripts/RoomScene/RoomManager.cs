@@ -150,7 +150,8 @@ namespace RoomScene
                 if (PhotonNetwork.IsMasterClient)
                 {
                     Debug.Log("pV_gmsettings: " + pV_gmsettings);
-                    pV_gmsettings.RPC(_resourceList.setColorPropertiesRPC, RpcTarget.AllViaServer, _sphereColor.r, _sphereColor.g, _sphereColor.b, value2);      
+                    _gameSettings.RoundSettings();
+                    pV_gmsettings.RPC(_resourceList.setColorPropertiesRPC, RpcTarget.All, _sphereColor.r, _sphereColor.g, _sphereColor.b, value2);      
                 }
                 
             }            
@@ -158,9 +159,10 @@ namespace RoomScene
         }
         public void GameSettingsWait()
         {
-            _gameSettings.RoundSettings();
+            
             //PhotonNetwork.IsMessageQueueRunning = false;
-            SceneManager.LoadScene(_gameScene);
+            PhotonNetwork.LoadLevel(_gameScene);
+            //SceneManager.LoadScene(_gameScene);
         }
 
 

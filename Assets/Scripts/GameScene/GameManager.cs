@@ -198,18 +198,30 @@ namespace GameScene
                 {
                     Debug.Log("GoToRound2");
                     _propertiesManager.RoomCustomPropertiesSettings(2, _customProperties.roundKey);
-                    SceneManager.LoadScene(_gameScene);
+                    photonView.RPC(_resourceList.LoadGameSceneRPC, RpcTarget.AllViaServer);
+                                   
+                    //SceneManager.LoadScene(_gameScene);
                 }
                 else
                 {
 
                     Debug.Log("GameFinish");
-                    _networkManager.LeaveConnect();
+                    photonView.RPC(_resourceList.LoadDisConnectRPC, RpcTarget.AllViaServer);
                     
                 }
             }
         }
 
+        [PunRPC]
+        public void LoadGameScene()
+        {
+            PhotonNetwork.LoadLevel(_gameScene);
+        }
 
+        [PunRPC]
+        public void LoadDisConnect()
+        {
+            _networkManager.LeaveConnect();
+        }
     }
 }

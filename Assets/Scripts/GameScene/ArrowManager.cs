@@ -21,7 +21,7 @@ namespace GameScene
         private CameraManager _cameraManager;
         private ResourceList resource = new ResourceList();
         private GameObject _myRotChangeObj;
-        private string _destroyTime = "DestroyTime";
+        
         //public bool generateArrow = true;
         [SerializeField] private PlayerInstance playerInstance;
         //[SerializeField] private ArrowGenerater arrowGenerater;
@@ -88,22 +88,7 @@ namespace GameScene
             //_cameraManager.CameraZoom();
             //アニメーション
             await UniTask.WaitUntil(() => Input.GetMouseButtonUp(0), cancellationToken: token);
-            var components= _arrowObj.GetComponents<MonoBehaviour>();
-            foreach(var component in components)
-            {
-                Debug.Log(" getcomponent: " + component);
-                var type = component.GetType();
-                if (type == typeof(Targets) || type == typeof(Targets2))
-                {
-                    var setMethod = GetType().GetMethod(_destroyTime);
-                    if (setMethod != null)
-                    {
-                        setMethod.Invoke(this, null);
-                    }
-
-                }
-   
-            }
+            
 
             Debug.Log("click");
 

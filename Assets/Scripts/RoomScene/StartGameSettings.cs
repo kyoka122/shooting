@@ -27,10 +27,9 @@ namespace RoomScene
             colorArray[3] = value;
 
             _propertiesManager.PlayerCustomPropertiesSettings(colorArray, _propertiesList.colorKey, PhotonNetwork.LocalPlayer);
-            if (PhotonNetwork.IsMasterClient)
-            {
-                _roomManager.GameSettingsWait();
-            }
+        
+            _roomManager.GameSettingsWait();
+            
         }
     }
 }

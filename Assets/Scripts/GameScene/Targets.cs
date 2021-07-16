@@ -32,7 +32,7 @@ namespace GameScene
        
         }
 
-
+        //文字列で作成者が呼び出し(TargetManager)
         public async void DestroyTime()
         {
             try
@@ -46,21 +46,29 @@ namespace GameScene
             }
             if (gameObject != null)
             {
-                _photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
                 PhotonNetwork.Destroy(gameObject);
             }
         }
 
         public void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.GetComponent<PhotonView>().Owner == PhotonNetwork.LocalPlayer && other.CompareTag(_tagList.arrowTag))
+            if (other.CompareTag(_tagList.arrowTag))
             {
-                Debug.Log("hit!!!");
-                //_photonView_targetMn = _targetManager.gameObject.GetComponent<PhotonView>();
-                _targetManager.TargetDestroy(_photonView);
-                _targetManager.TargetInstance();          
-                _scoreManager.UpdateScore(lowPoint);
-                //当たったよ表示（ワールド座標でImageで名前と得点（それかプレイヤーリストに））
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    Debug.Log("hit!!!");
+                    //_photonView_targetMn = _targetManager.gameObject.GetComponent<PhotonView>();
+                    _targetManager.TargetDestroy(_photonView);
+                    _targetManager.TargetInstance();
+                    //当たったよ表示（ワールド座標でImageで名前と得点（それかプレイヤーリストに））
+                }
+                else if (other.gameObject.GetComponent<PhotonView>().Owner == PhotonNetwork.LocalPlayer)
+                {
+                    _scoreManager.UpdateScore(lowPoint);
+                    
+                }
+
+
             }
 
         }

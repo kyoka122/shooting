@@ -45,27 +45,31 @@ namespace GameScene
             }
             if (gameObject!=null)
             {
-                _photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
                 PhotonNetwork.Destroy(gameObject);
             }
         }
 
         public void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.GetComponent<PhotonView>().Owner == PhotonNetwork.LocalPlayer && other.CompareTag(_tagList.arrowTag))
+            if (other.CompareTag(_tagList.arrowTag))
             {
-                Debug.Log("hit2!!!");
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    Debug.Log("hit!!!");
+                    //_photonView_targetMn = _targetManager.gameObject.GetComponent<PhotonView>();
+                    _targetManager.TargetDestroy(_photonView);
+                    _targetManager.TargetInstance();
+                    //当たったよ表示（ワールド座標でImageで名前と得点（それかプレイヤーリストに））
+                }
+                else if (other.gameObject.GetComponent<PhotonView>().Owner == PhotonNetwork.LocalPlayer)
+                {
+                    _scoreManager.UpdateScore(highPoint);
 
-                _targetManager.TargetDestroy(_photonView);
-                //_photonView_targetMn=_targetManager.gameObject.GetComponent<PhotonView>();
-                //_targetManager.TargetDestroy(_photonView_targetMn);
-                _targetManager.TargetInstance();               
-                _scoreManager.UpdateScore(highPoint);
+                }
+
+
             }
 
-            //当たったよ表示（ワールド座標でImageで名前と得点（それかプレイヤーリストに））
-
         }
-
     }
 }
