@@ -45,7 +45,8 @@ namespace RoomScene
         [SerializeField] private GameObject _inputFieldRoomObj;
         [SerializeField] private GameObject _colorSetSphere;
         [SerializeField] private GameObject unitychan_OffLine;
-        
+        [SerializeField] private GameObject _clrSetPanel;
+        [SerializeField] private GameObject _timeLimit;
         public enum PlayMode
         {
             Local,
@@ -152,22 +153,20 @@ namespace RoomScene
                 {
                     SceneManager.LoadScene(_demoScene);
                 }
-                else
+                else if(PhotonNetwork.IsMasterClient)
                 {
-                    if (PhotonNetwork.IsMasterClient)
-                    {
-                        Debug.Log("pV_gmsettings: " + pV_gmsettings);
-                        _gameSettings.RoundSettings();
-                        pV_gmsettings.RPC(_resourceList.setColorPropertiesRPC, RpcTarget.All, _sphereColor.r, _sphereColor.g, _sphereColor.b, value2);
-                    }
-
+                    Debug.Log("pV_gmsettings: " + pV_gmsettings);
+                    _gameSettings.RoundSettings();
+                    pV_gmsettings.RPC(_resourceList.setColorPropertiesRPC, RpcTarget.All, _sphereColor.r, _sphereColor.g, _sphereColor.b, value2);
                 }
             }
         }
         public async void GameSettingsWait()
         {
+            _clrSetPanel.SetActive(false);
             _cancellationTokenSource = new CancellationTokenSource();
             _linkedToken = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource.Token, this.GetCancellationTokenOnDestroy());
+            _timeLimit.SetActive(true);
             //PhotonNetwork.IsMessageQueueRunning = false;
             //PhotonNetwork.LoadLevel(_gameScene);
             await UniTask.Delay(TimeSpan.FromSeconds(5f), cancellationToken: _linkedToken.Token);

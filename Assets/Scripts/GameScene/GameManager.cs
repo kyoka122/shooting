@@ -182,7 +182,8 @@ namespace GameScene
             Debug.Log("DispRPC");
             _resultManager.Result();
            
-            if (PhotonNetwork.IsMasterClient) {
+            if (PhotonNetwork.IsMasterClient)
+            {
                 _cancellationTokenSource_Shot = new CancellationTokenSource();
                 _linkedToken_Shot = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource_Shot.Token, this.GetCancellationTokenOnDestroy());
                 try
