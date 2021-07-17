@@ -45,8 +45,8 @@ namespace GameScene
             }
             if (gameObject!=null)
             {
-                Debug.Log("desObj :" + gameObject);
-                PhotonNetwork.Destroy(gameObject);
+                Debug.Log("desObj :" + _photonView);
+                PhotonNetwork.Destroy(_photonView);
             }
         }
 

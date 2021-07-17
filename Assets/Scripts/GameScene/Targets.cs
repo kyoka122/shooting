@@ -18,14 +18,13 @@ namespace GameScene
         ScoreManager _scoreManager;
         [SerializeField] private int lowPoint=100;
         TagList _tagList = new TagList();
-        private CancellationTokenSource _cancellationTokenSource;
-        private CancellationTokenSource _linkedToken;
+        //private CancellationTokenSource _cancellationTokenSource;
+        //private CancellationTokenSource _linkedToken;
 
 
         public void Awake()
         {
-            _cancellationTokenSource = new CancellationTokenSource();
-            _linkedToken = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource.Token, this.GetCancellationTokenOnDestroy());
+  
             _photonView = GetComponent<PhotonView>();
             _scoreManager = FindObjectOfType<ScoreManager>();
             _targetManager = FindObjectOfType<TargetManager>();
@@ -33,8 +32,10 @@ namespace GameScene
         }
 
         //ï∂éöóÒÇ≈çÏê¨é“Ç™åƒÇ—èoÇµ(TargetManager)
-        public async void DestroyTime()
+        /*public async void DestroyTime()
         {
+            _cancellationTokenSource = new CancellationTokenSource();
+            _linkedToken = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource.Token, this.GetCancellationTokenOnDestroy());
             try
             {
                 await UniTask.Delay(TimeSpan.FromSeconds(6f), cancellationToken: _linkedToken.Token);
@@ -46,10 +47,10 @@ namespace GameScene
             }
             if (gameObject != null)
             {
-                Debug.Log("desObj :" + gameObject);
-                PhotonNetwork.Destroy(gameObject);
+                Debug.Log("desObj :" + _photonView);
+                PhotonNetwork.Destroy(_photonView);
             }
-        }
+        }*/
 
         public void OnTriggerEnter(Collider other)
         {

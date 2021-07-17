@@ -26,12 +26,12 @@ namespace GameScene
         private GameObject _myRotChangeObj;
         private Transform _parent;
         private Transform _parent2;
+        private string _hitTrigger = "hit";
         //public bool generateArrow = true;
         [SerializeField] private PlayerInstance playerInstance;
         //[SerializeField] private ArrowGenerater arrowGenerater;
         [SerializeField] private TargetManager targetManager;
-        //[SerializeField] GameManager gameManager;
-        //[SerializeField] PlayerInstance playerInstance;
+        [SerializeField] private Animator _hitanimator;
 
         enum CancelCause
         {
@@ -73,6 +73,16 @@ namespace GameScene
                     {
                         break;
                     }
+                    else if (_cancelCause == CancelCause.CONTINUE)
+                    {
+                        _cancellationTokenSource = new CancellationTokenSource();
+                        _linkedToken = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource.Token, this.GetCancellationTokenOnDestroy());
+                        _hitanimator.SetTrigger(_hitTrigger);
+                        await UniTask.Delay(TimeSpan.FromSeconds(5f), cancellationToken: _linkedToken.Token);
+                       
+                        break;
+                    }
+                    
   
                 }
                 Debug.Log("tryroop");
@@ -126,6 +136,10 @@ namespace GameScene
             Debug.Log("Pause");
             _cancelCause = CancelCause.CONTINUE;
             _linkedToken.Cancel();
+            if (_arrowObj!=null)
+            {
+                PhotonNetwork.Destroy(_arrowObj.GetPhotonView());//GetPhotonViewŽg‚Á‚Ä‚Ý‚½
+            }
         }
 
         public void TimeOver()

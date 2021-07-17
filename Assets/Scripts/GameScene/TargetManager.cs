@@ -28,13 +28,14 @@ namespace GameScene
             float[] random=new float[6];
             for (int i=0; i<3;i++)
             {
-                random[i] = Random.Range(0f,70f);
+                random[i] = Random.Range(-70f,70f);
             }
             for (int i = 3; i < 6; i++)
             {
                 random[i] = Random.Range(0f, 360f);
             }
-            var rargetObj=PhotonNetwork.InstantiateRoomObject(_target, new Vector3(random[0], random[1], random[2]), Quaternion.Euler(random[3], random[4], random[5]));
+            var rargetObj=PhotonNetwork.Instantiate(_target, new Vector3(random[0], random[1], random[2]), Quaternion.Euler(random[3], random[4], random[5]));
+            Debug.Log("Pos: "+ random[0]+","+ random[1] + "," + random[2]);
             var components = rargetObj.GetComponents<MonoBehaviour>();
             foreach (var component in components)
             {

@@ -26,10 +26,10 @@ namespace GameScene
                 _posx = transform.position.x;
                 _posy = transform.position.y;
                 _posz = transform.position.z;
-                if (_posx < -70 || 70 < _posx || _posy < -70 || 70 < _posy || _posz < -70 || 70 < _posz)
+                if (_posx < -60 || 60 < _posx || _posy < -60 || 60 < _posy || _posz < -60 || 60 < _posz)
                 {
                     _radsquere = _posx * _posx + _posy * _posy + _posz * _posz;
-                    if (_radsquere > 490)
+                    if (_radsquere > 3600)
                     {
                         Debug.Log("desObj :" + _photonView);
                         PhotonNetwork.Destroy(_photonView);

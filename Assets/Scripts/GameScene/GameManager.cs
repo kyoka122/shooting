@@ -97,14 +97,14 @@ namespace GameScene
            
             if (PhotonNetwork.IsMasterClient)
             {
-                for (int i = 0; i < 25; i++)
+                for (int i = 0; i < 40; i++)
                 {
                     _targetManager.TargetInstance();
                 }
             }
 
             _myRotObj = await _playerInstance.InstancePlayer(_linkedToken_Fst.Token);//引数入れる？
-            Debug.Log("_myRotObj1: "+ _myRotObj);                                                                        //アニメーション           
+            Debug.Log("_myRotObj1: "+ _myRotObj);                                                                               
             _myRotManager = _myRotObj.GetComponent<MyRotManager>();
      
             _myRotManager.enabled = true;
@@ -157,19 +157,7 @@ namespace GameScene
                 }
                 _rpcbool_game = false;
                 GetComponent<PhotonView>().RPC(_resourceList.gameRPC, RpcTarget.AllViaServer);
-                /*Debug.Log(targetPlayer);
-                if (!_players.Contains(targetPlayer))
-                {
-                    _players.Add(targetPlayer);
-                }
 
-                Debug.Log("ready: " + PhotonNetwork.CurrentRoom.PlayerCount);
-                Debug.Log("playercount: " + _players.Count);
-                if (_players.Count == PhotonNetwork.CurrentRoom.PlayerCount)
-                {
-                    _rpcbool_game = false;
-                    GetComponent<PhotonView>().RPC(_resourceList.gameRPC, RpcTarget.AllViaServer);
-                }*/
             }
         }
 
@@ -201,7 +189,7 @@ namespace GameScene
 
 
             _whistle.SetActive(true);
-            _text_start.SetActive(true);
+            _text_finish.SetActive(true);
             await UniTask.Delay(TimeSpan.FromSeconds(3f), cancellationToken: _linkedToken_Ist.Token);
             _whistle.SetActive(false);
             _text_finish.SetActive(false);
