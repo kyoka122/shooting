@@ -168,9 +168,23 @@ namespace RoomScene
             _linkedToken = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource.Token, this.GetCancellationTokenOnDestroy());
             _timeLimit.SetActive(true);
             //PhotonNetwork.IsMessageQueueRunning = false;
-            //PhotonNetwork.LoadLevel(_gameScene);
             await UniTask.Delay(TimeSpan.FromSeconds(5f), cancellationToken: _linkedToken.Token);
+            PhotonNetwork.IsMessageQueueRunning = false;
             SceneManager.LoadScene(_gameScene);
+
+            /*if (PhotonNetwork.IsMasterClient)
+            {
+                SceneManager.LoadScene(_gameScene);
+            }
+            else
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(2.0f), cancellationToken: _linkedToken.Token);
+                SceneManager.LoadScene(_gameScene);
+                return;
+            }*/
+     
+            
+            
         }
 
 

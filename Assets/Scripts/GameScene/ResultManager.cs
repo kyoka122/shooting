@@ -29,7 +29,7 @@ namespace GameScene
         public void CheckScoreSet(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
         {
             //MasterÇÃÇ›í ÇÈ
-            _players.Add(targetPlayer);
+            /*_players.Add(targetPlayer);
             //_playerscore.Add((int)changedProps[_propertiesList.scoreKey]);
             _playerscore.Add((int)targetPlayer.CustomProperties[_propertiesList.scoreKey]);
             if (_players.Count == PhotonNetwork.CurrentRoom.PlayerCount)
@@ -41,7 +41,7 @@ namespace GameScene
                     //í êMêÿÇÍÇΩÇÁÅHÅHÅ©ç°âÒÇÕñ≥éã
                 }
 
-            }
+            }*/
 
         }
  

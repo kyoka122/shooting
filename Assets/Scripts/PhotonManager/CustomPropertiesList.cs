@@ -25,7 +25,7 @@ namespace Photonmanager
         /// <summary>
         /// bool
         /// </summary>
-        public string startKey { get => "st"; }
+        public string stateKey { get => "st"; }
 
     }
 

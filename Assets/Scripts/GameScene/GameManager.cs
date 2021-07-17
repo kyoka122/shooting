@@ -49,9 +49,9 @@ namespace GameScene
         private SetCustomPropertiesManager _propertiesManager=new SetCustomPropertiesManager();
         private CustomPropertiesList _customProperties=new CustomPropertiesList();
         private ResourceList _resourceList = new ResourceList();
+        private State _nextState;
 
-
-        private List<Player> _players=new List<Player>();
+        //private List<Player> _players=new List<Player>();
         private NetworkManager _networkManager;
 
         private PlayerInstance _playerInstance;
@@ -65,7 +65,8 @@ namespace GameScene
         [SerializeField] private Timer _timer;
         [SerializeField] private GameObject _camera;
         [SerializeField] State state=State.None;
-
+        [SerializeField] private GameObject _text_start;
+        [SerializeField] private GameObject _text_finish;
         
 
         public State Readstate()
@@ -75,6 +76,7 @@ namespace GameScene
 
         private async void Awake()
         {
+            PhotonNetwork.IsMessageQueueRunning = true;
             _cancellationTokenSource_Fst = new CancellationTokenSource();
             _linkedToken_Fst = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource_Fst.Token, this.GetCancellationTokenOnDestroy());
             
@@ -93,27 +95,28 @@ namespace GameScene
            
             if (PhotonNetwork.IsMasterClient)
             {
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 18; i++)
                 {
                     _targetManager.TargetInstance();
                 }
             }
-            _cancellationTokenSource_Ist = new CancellationTokenSource();
-            _linkedToken_Ist = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource_Ist.Token, this.GetCancellationTokenOnDestroy());
-            _myRotObj = await _playerInstance.InstancePlayer(_linkedToken_Ist.Token);//引数入れる？
+
+            _myRotObj = await _playerInstance.InstancePlayer(_linkedToken_Fst.Token);//引数入れる？
             Debug.Log("_myRotObj1: "+ _myRotObj);                                                                        //アニメーション           
             _myRotManager = _myRotObj.GetComponent<MyRotManager>();
      
             _myRotManager.enabled = true;
             state = State.StartSetUp;
-            if (PhotonNetwork.CurrentRoom.CustomProperties[_customProperties.startKey]is int)
+            if (PhotonNetwork.CurrentRoom.CustomProperties[_customProperties.stateKey]is int)
             {
-                _propertiesManager.PlayerCustomPropertiesSettings((int)State.Playing2, _customProperties.startKey, PhotonNetwork.LocalPlayer);
+                _propertiesManager.PlayerCustomPropertiesSettings((int)State.Playing2, _customProperties.stateKey, PhotonNetwork.LocalPlayer);
+                _nextState = State.Playing2;
                 Debug.Log("Round: "+ State.Playing2);
             }
             else
             {
-                _propertiesManager.PlayerCustomPropertiesSettings((int)State.Playing, _customProperties.startKey, PhotonNetwork.LocalPlayer);
+                _propertiesManager.PlayerCustomPropertiesSettings((int)State.Playing, _customProperties.stateKey, PhotonNetwork.LocalPlayer);
+                _nextState = State.Playing;
                 Debug.Log("Round: " + State.Playing);
             }
             return;
@@ -124,7 +127,7 @@ namespace GameScene
         {
             if (_rpcbool_game)
             {
-                if (state == State.Playing)
+                /*if (state == State.Playing)
                 {
                     if ((int)targetPlayer.CustomProperties[_customProperties.startKey] != (int)State.Playing)
                     {
@@ -137,9 +140,22 @@ namespace GameScene
                     {
                         return;
                     }
-                }
+                }*/
+                Player[] players = PhotonNetwork.PlayerList;
 
-                Debug.Log(targetPlayer);
+                for (int i=0; i< players.Length;i++)
+                {
+                    Debug.Log("playerscheck"+ players[i]);
+                    Debug.Log("state"+ _nextState+" "+(int)_nextState);
+                    if ((int)players[i].CustomProperties[_customProperties.stateKey] != (int)_nextState)
+                    {
+                        Debug.Log("playerscheckreturn" + players[i]);
+                        return;
+                    }
+                }
+                _rpcbool_game = false;
+                GetComponent<PhotonView>().RPC(_resourceList.gameRPC, RpcTarget.AllViaServer);
+                /*Debug.Log(targetPlayer);
                 if (!_players.Contains(targetPlayer))
                 {
                     _players.Add(targetPlayer);
@@ -151,7 +167,7 @@ namespace GameScene
                 {
                     _rpcbool_game = false;
                     GetComponent<PhotonView>().RPC(_resourceList.gameRPC, RpcTarget.AllViaServer);
-                }
+                }*/
             }
         }
 
@@ -166,19 +182,33 @@ namespace GameScene
             _linkedToken_Dly = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource_Dly.Token, this.GetCancellationTokenOnDestroy());
             Debug.Log("_linkedToken_Dly.Token: "+ _linkedToken_Dly.Token);
             Debug.Log("_myRotObj: " + _myRotObj);
+
+            _cancellationTokenSource_Ist = new CancellationTokenSource();
+            _linkedToken_Ist = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource_Ist.Token, this.GetCancellationTokenOnDestroy());
+            _text_start.SetActive(true);
+            await UniTask.Delay(TimeSpan.FromSeconds(2.5f), cancellationToken: _linkedToken_Ist.Token);
+            _text_start.SetActive(false);
+
             _timer.enabled = true;
             await _arrowManager.StartShooting(_linkedToken_Dly.Token, _myRotObj);
+
             Debug.Log("Task脱出");
 
             //アニメーション（ラウンド１結果発表）
             state = State.ScoreSent;
             _propertiesManager.PlayerCustomPropertiesSettings(_scoreManager.ReadScore(),_customProperties.scoreKey, PhotonNetwork.LocalPlayer);
+            _propertiesManager.PlayerCustomPropertiesSettings(state, _customProperties.stateKey, PhotonNetwork.LocalPlayer);
         }
 
         //Result
         [PunRPC]
         public async void DispResultRPC()//できるかな？
         {
+
+            _text_finish.SetActive(true);
+            await UniTask.Delay(TimeSpan.FromSeconds(3f), cancellationToken: _linkedToken_Ist.Token);
+            _text_finish.SetActive(false);
+
             Debug.Log("DispRPC");
             _resultManager.Result();
            
@@ -188,6 +218,7 @@ namespace GameScene
                 _linkedToken_Shot = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource_Shot.Token, this.GetCancellationTokenOnDestroy());
                 try
                 {
+                    
                     await UniTask.Delay(TimeSpan.FromSeconds(10f), cancellationToken: _linkedToken_Shot.Token);
                 }
                 catch
@@ -216,7 +247,8 @@ namespace GameScene
         [PunRPC]
         public void LoadGameScene()
         {
-            PhotonNetwork.LoadLevel(_gameScene);
+            PhotonNetwork.IsMessageQueueRunning = false;
+            SceneManager.LoadScene(_gameScene);
         }
 
         [PunRPC]

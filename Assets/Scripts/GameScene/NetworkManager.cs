@@ -162,14 +162,14 @@ namespace GameScene
                 }
 
             }
-            if (_gameManager.Readstate() == State.Playing)
+            if (_gameManager.Readstate() == State.Playing || _gameManager.Readstate() == State.Playing2)
             {
                 Debug.Log("_scoreManager" + _scoreManager);
                 Debug.Log("targetPlayer" + targetPlayer);
                 Debug.Log("changedProps[_propertiesList.scoreKey]: " + changedProps[_propertiesList.scoreKey]);
                 if (changedProps[_propertiesList.scoreKey] is int a)
                 {
-                    Debug.Log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvv: " + a);
+                    Debug.Log("vvvvvvvvv: " + a);
                 }
 
                 int num = (int)changedProps[_propertiesList.scoreKey];
