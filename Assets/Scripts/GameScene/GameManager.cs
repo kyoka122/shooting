@@ -97,7 +97,7 @@ namespace GameScene
            
             if (PhotonNetwork.IsMasterClient)
             {
-                for (int i = 0; i < 40; i++)
+                for (int i = 0; i < 30; i++)
                 {
                     _targetManager.TargetInstance();
                 }

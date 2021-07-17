@@ -28,6 +28,22 @@ namespace GameScene
             {
                 transform.localEulerAngles = _firstMyRot;
             }
+            else if (Input.GetKeyDown(KeyCode.W))
+            {
+                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x + 20, transform.localEulerAngles.y, transform.localEulerAngles.z);
+            }
+            else if (Input.GetKeyDown(KeyCode.A))
+            {
+                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y -20, transform.localEulerAngles.z);
+            }
+            else if (Input.GetKeyDown(KeyCode.S))
+            {
+                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x - 20, transform.localEulerAngles.y, transform.localEulerAngles.z + 20);
+            }
+            else if (Input.GetKeyDown(KeyCode.D))
+            {
+                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y + 20, transform.localEulerAngles.z);
+            }
 
         }
     }
