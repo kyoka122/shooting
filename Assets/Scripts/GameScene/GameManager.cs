@@ -67,7 +67,9 @@ namespace GameScene
         [SerializeField] State state=State.None;
         [SerializeField] private GameObject _text_start;
         [SerializeField] private GameObject _text_finish;
-        
+        [SerializeField] private GameObject _bgm;
+        [SerializeField] private GameObject _whistle;
+        //[SerializeField] private AudioSource _whistle;
 
         public State Readstate()
         {
@@ -95,7 +97,7 @@ namespace GameScene
            
             if (PhotonNetwork.IsMasterClient)
             {
-                for (int i = 0; i < 18; i++)
+                for (int i = 0; i < 25; i++)
                 {
                     _targetManager.TargetInstance();
                 }
@@ -185,14 +187,24 @@ namespace GameScene
 
             _cancellationTokenSource_Ist = new CancellationTokenSource();
             _linkedToken_Ist = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource_Ist.Token, this.GetCancellationTokenOnDestroy());
+
             _text_start.SetActive(true);
+            _whistle.SetActive(true);
             await UniTask.Delay(TimeSpan.FromSeconds(2.5f), cancellationToken: _linkedToken_Ist.Token);
             _text_start.SetActive(false);
-
+            _bgm.SetActive(true);
             _timer.enabled = true;
-            await _arrowManager.StartShooting(_linkedToken_Dly.Token, _myRotObj);
+            _whistle.SetActive(false);
 
+            await _arrowManager.StartShooting(_linkedToken_Dly.Token, _myRotObj);
             Debug.Log("Task脱出");
+
+
+            _whistle.SetActive(true);
+            _text_start.SetActive(true);
+            await UniTask.Delay(TimeSpan.FromSeconds(3f), cancellationToken: _linkedToken_Ist.Token);
+            _whistle.SetActive(false);
+            _text_finish.SetActive(false);
 
             //アニメーション（ラウンド１結果発表）
             state = State.ScoreSent;
@@ -205,9 +217,7 @@ namespace GameScene
         public async void DispResultRPC()//できるかな？
         {
 
-            _text_finish.SetActive(true);
-            await UniTask.Delay(TimeSpan.FromSeconds(3f), cancellationToken: _linkedToken_Ist.Token);
-            _text_finish.SetActive(false);
+            
 
             Debug.Log("DispRPC");
             _resultManager.Result();

@@ -24,10 +24,27 @@ namespace GameScene
         [SerializeField] private PhotonView _photonView_GM;
         [SerializeField] private GameObject _resultPanel;
         [SerializeField] private ScoreManager _scoreManager;
+        //[SerializeField] private GameManager _gameManager;
 
         //NetworkManagerÇ…ì¸ÇÍÇÈÅHÅH
         public void CheckScoreSet(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
         {
+            if (rpcbool_dispresult) {
+                Player[] players = PhotonNetwork.PlayerList;
+
+                for (int i = 0; i < players.Length; i++)
+                {
+                    Debug.Log("playerscheck" + players[i]);
+
+                    if ((int)players[i].CustomProperties[_propertiesList.stateKey] != (int)State.ScoreSent)
+                    {
+                        Debug.Log("playerscheckreturn" + players[i]);
+                        return;
+                    }
+                }
+                rpcbool_dispresult = false;
+                _photonView_GM.RPC(resourceList.dispResultRPC, RpcTarget.AllViaServer);
+            }
             //MasterÇÃÇ›í ÇÈ
             /*_players.Add(targetPlayer);
             //_playerscore.Add((int)changedProps[_propertiesList.scoreKey]);

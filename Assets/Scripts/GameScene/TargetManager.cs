@@ -28,7 +28,7 @@ namespace GameScene
             float[] random=new float[6];
             for (int i=0; i<3;i++)
             {
-                random[i] = Random.Range(0f,60f);
+                random[i] = Random.Range(0f,70f);
             }
             for (int i = 3; i < 6; i++)
             {
