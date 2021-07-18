@@ -170,12 +170,13 @@ namespace RoomScene
             //PhotonNetwork.IsMessageQueueRunning = false;
             await UniTask.Delay(TimeSpan.FromSeconds(5f), cancellationToken: _linkedToken.Token);
             PhotonNetwork.IsMessageQueueRunning = false;
+            if (PhotonNetwork.IsMasterClient)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: _linkedToken.Token);
+            }
             SceneManager.LoadScene(_gameScene);
 
-            /*if (PhotonNetwork.IsMasterClient)
-            {
-                SceneManager.LoadScene(_gameScene);
-            }
+            /*
             else
             {
                 await UniTask.Delay(TimeSpan.FromSeconds(2.0f), cancellationToken: _linkedToken.Token);
