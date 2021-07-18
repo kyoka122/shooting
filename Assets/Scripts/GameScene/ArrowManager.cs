@@ -147,7 +147,7 @@ namespace GameScene
             _linkedToken.Cancel();
             if (_arrowObj!=null)
             {
-                PhotonNetwork.Destroy(_arrowObj.GetPhotonView());//GetPhotonViewŽg‚Á‚Ä‚Ý‚½
+                PhotonNetwork.Destroy(_arrowObj.GetComponent<PhotonView>());//GetPhotonViewŽg‚Á‚Ä‚Ý‚½
             }
         }
 
