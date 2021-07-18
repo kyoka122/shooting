@@ -75,12 +75,12 @@ namespace GameScene
                     }
                     else if (_cancelCause == CancelCause.CONTINUE)
                     {
+                        Debug.Log("aaaaaContinue");
                         _cancellationTokenSource = new CancellationTokenSource();
                         _linkedToken = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource.Token, this.GetCancellationTokenOnDestroy());
                         _hitanimator.SetTrigger(_hitTrigger);
                         await UniTask.Delay(TimeSpan.FromSeconds(5f), cancellationToken: _linkedToken.Token);
-                       
-                        break;
+
                     }
                     
   

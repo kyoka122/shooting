@@ -44,6 +44,10 @@ namespace GameScene
             {
                 transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y + 20, transform.localEulerAngles.z);
             }
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                FindObjectOfType<ArrowManager>().Pause();
+            }
 
         }
     }
