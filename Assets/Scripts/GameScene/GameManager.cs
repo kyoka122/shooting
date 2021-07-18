@@ -149,10 +149,14 @@ namespace GameScene
                 {
                     Debug.Log("playerscheck"+ players[i]);
                     Debug.Log("state"+ _nextState+" "+(int)_nextState);
-                    if ((int)players[i].CustomProperties[_customProperties.stateKey] != (int)_nextState)
+                    if (players[i].CustomProperties[_customProperties.stateKey] is int plstatekey)
                     {
-                        Debug.Log("playerscheckreturn" + players[i]);
-                        return;
+                        if (plstatekey != (int)_nextState)
+                        {
+                            Debug.Log("playerscheckreturn" + players[i]);
+                            return;
+                        }
+                        
                     }
                 }
                 _rpcbool_game = false;
