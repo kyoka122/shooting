@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Triggers;
 using Photon.Pun;
 using Photonmanager;
 using System;
@@ -115,7 +116,15 @@ namespace GameScene
             
 
             Debug.Log("click");
-            _arrowRb = _arrowObj.GetComponent<Rigidbody>();
+            if (_arrowObj!=null)
+            {
+                _arrowRb = _arrowObj.GetComponent<Rigidbody>();
+            }
+            else
+            {
+                return;
+            }
+            
             //_arrowRb.AddRelativeForce(new Vector3(0,-50f,0),ForceMode.VelocityChange);
             _arrowRb.AddRelativeForce(new Vector3(0,0,-50f),ForceMode.VelocityChange);
             //arrowRb.AddRelativeForce(_arrowObj.transform*-10f,ForceMode.VelocityChange);
