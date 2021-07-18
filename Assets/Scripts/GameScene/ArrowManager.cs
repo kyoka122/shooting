@@ -107,7 +107,7 @@ namespace GameScene
             Debug.Log("PosChange");
            
  
-            _arrowRb = _arrowObj.GetComponent<Rigidbody>();
+            
             await UniTask.WaitUntil(() => Input.GetMouseButtonDown(0),cancellationToken:token);
    
             //アニメーション
@@ -115,7 +115,7 @@ namespace GameScene
             
 
             Debug.Log("click");
-
+            _arrowRb = _arrowObj.GetComponent<Rigidbody>();
             //_arrowRb.AddRelativeForce(new Vector3(0,-50f,0),ForceMode.VelocityChange);
             _arrowRb.AddRelativeForce(new Vector3(0,0,-50f),ForceMode.VelocityChange);
             //arrowRb.AddRelativeForce(_arrowObj.transform*-10f,ForceMode.VelocityChange);
