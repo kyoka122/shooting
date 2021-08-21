@@ -145,10 +145,9 @@ namespace GameScene
             Debug.Log("Pause");
             _cancelCause = CancelCause.CONTINUE;
             _linkedToken.Cancel();
-            var photonView = _arrowObj.GetComponent<PhotonView>();
-            if (photonView != null)
+            if (_arrowObj!=null)
             {
-                PhotonNetwork.Destroy(photonView);//GetPhotonViewŽg‚Á‚Ä‚Ý‚½
+                PhotonNetwork.Destroy(_arrowObj.GetComponent<PhotonView>());//GetPhotonViewŽg‚Á‚Ä‚Ý‚½
             }
         }
 
